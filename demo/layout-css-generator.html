@@ -1,0 +1,665 @@
+---
+layout: demo
+title: 通用布局生成器
+category: tool
+---
+
+<script type="text/javascript" src="js/htmlformat.js"></script>
+<script type="text/javascript" src="js/layout-css-generator-jqueryui.js"></script>
+    <style>
+body, h1, h2, h3, h4, h5, h6,  p, blockquote,
+dl, dt, dd, ul, ol, li,
+pre,
+form, fieldset, legend, button, input, textarea,
+th, td, figure {
+    margin: 0;
+    padding: 0;
+}
+body,
+button, input, select, textarea {
+    font: 12px/1.5 arial;
+}
+h1, h2, h3, h4, h5, h6,button, input, select, textarea { font-size: 100%; }
+address, cite, dfn, em, var { font-style: normal; }
+code, kbd, pre, samp { font-family: courier new, courier, monospace; }
+small { font-size: 12px; }
+
+ul, ol { list-style: none; }
+
+a { text-decoration: none;}
+a:hover { text-decoration: underline; }
+
+sup { vertical-align: text-top; }
+sub { vertical-align: text-bottom; }
+
+legend { color: #000; }
+fieldset, img { border: 0; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+.group,.clear {*zoom:1;}
+.group:after,.clear:after {content:'\20';display:block;clear:both;height:0;}
+body .hide{display:none;}
+/*
+ * jQuery UI Resizable 1.8.15
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Resizable#theming
+ */
+.ui-resizable { position: relative;}
+.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+.ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+.ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+.ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+
+/* 自定义原子CSS */
+.left{float:left;}
+.right{float:right;}
+        /* 配置面板 */
+        .panel{border:1px solid #808080;border-radius:2px;position:absolute;
+        box-shadow:3px 3px 0 rgba(128,128,128,0.2);background-color:#F2F2F2;}
+        .panel-hd{background: #ffffff; /* Old browsers */
+background: -moz-linear-gradient(top, #ffffff 0%, #dddddd 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Opera11.10+ */
+background: -ms-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* IE10+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+background: linear-gradient(top, #ffffff 0%,#dddddd 100%); /* W3C */
+        height:24px;
+        line-height:24px;
+        text-align:center;
+            border-bottom:1px solid #cccccc;
+        }
+        .panel-bd{padding:10px;color:#333;}
+        .panel-hd h2{text-shadow:1px 1px 0 #fff;color:#000;}
+
+        .option-panel-layout{
+            width:280px;
+            top:450px;
+            left:400px;
+        }
+        .option-panel-page{
+            position:static;
+            border-width:0 0 1px 0;
+        }
+        .option-panel-page fieldset{display:inline-block;margin-right:10px;}
+        .option-panel-layout fieldset{margin-bottom:10px;}
+        .panel legend{text-shadow:1px 1px 0 #fff;color:#333;padding-bottom:5px;}
+        .panel select{min-width:60px;}
+        .panel button{padding:3px 5px;}
+        .panel input{width:40px;}
+        .panel-code{width:560px;left:50%;margin-left:-200px;top:250px;}
+        .panel-code textarea{width:100%;height:360px;margin-bottom:10px;font-family:'Courier New';background-color:#002B36;border:1px solid #ddd;color:#4A8800;font-size:14px;}
+        .fm-item{padding-bottom:10px;}
+
+        .child-col-width-list label{display:inline-block;margin-bottom:5px;text-shadow:1px 1px 0 #fff;}
+        .child-col-width-list input{margin-left:5px;}
+
+        /* 布局示例样式 */
+        .layout-page{margin:0 auto;background:#efefef;min-height:200px;padding-bottom:100px;text-align:center;font:40px/1 "微软雅黑";color:#333;
+        margin-top:20px;border-top:2px solid #fff;}
+        .layout{min-height:100px;margin-bottom:10px;text-align:center;font-size:smaller;}
+        .layout-group:after{content:'\20';display:block;clear:both;height:0;}
+        .layout-group{*zoom:1;*margin-bottom:10px;}
+		.layout-selected{outline:2px solid #39f;}
+        #doc .layout-selected{*background-color:#39f;}
+        #doc.layout-selected{*border:2px solid #39f;}
+        .layout-page input{display:block;background:transparent;text-align:center;width:100%;border:none;line-height:1;color:#333;padding:3px 0 5px 0;font-family:'Courier New';}
+        .layout input:focus,.layout-page input:focus {outline: 0}
+        .layout{background:rgb(179,217,255);background:rgba(179,217,255,0.6);}
+        .layout .layout{background:#B3EFAA;background:rgba(179,239,170,0.6);}
+        .layout .layout .layout{background:#333;background:rgba(51,51,51, 0.6);}
+        .layout .layout .layout input{color:#fff;}
+        .layout .layout .layout .layout{background:#000;background:rgba(0,0,0, 0.6);}
+        .layout .layout .layout .layout .layout{background-color:#FBC5D8;background:rgba(251,197,216,0.5)}
+
+        .layout-hidename input{visibility:hidden;}
+    </style>
+</head>
+<body id="layout">
+<div class="panel option-panel-page" id="option-page">
+    <div class="panel-bd group">
+        <div class="left">
+            <select id="doc-width">
+                <option value="950px" selected="selected">页面宽度</option>
+                <option value="985px">985px</option>
+                <option value="950px">950px</option>
+                <option value="100%">100%</option>
+                <option value="input">自定义</option>
+            </select>
+            <input type="" id="doc-width-input" style="display:none">
+            <select id="doc-grid">
+                <option value="0" selected="selected">栅格规格</option>
+                <option value="40x25-15">985=40x25-15</option>
+                <option value="40x24-10">950=40x24-10</option>
+                <option value="1x1-0">无缝设计</option>
+            </select>
+        <div class="hide">
+            <select disabled>
+                <option value="doc" selected="selected">float布局</option>
+                <option value="doc" >伪绝对定位布局</option>
+            </select>
+        </div>
+            <button type="button" id="button-toggle-name">隐藏布局class名</button>
+            <button type="button" id="button-dom">获取DOM结构</button>
+            <button type="button" id="button-css">获取CSS代码</button>
+            <button type="button" id="button-save" class="hide">保存布局信息至父窗口</button>
+            <input type="text" title="设置布局组className" id="layout-group-class" style="width:80px" value="layout-group" >
+			
+        </div>
+		<div class="right" id="button-col-group">
+            <button type="button" id="button-col-insert">插入一列(I)</button>
+            <button type="button" id="button-col-del">删除(D)</button>
+            <button type="button" id="button-col-left">左移(H)</button>
+            <button type="button" id="button-col-right">右移(L)</button>
+            <button type="button" id="button-col-up">组上移(K)</button>
+            <button type="button" id="button-col-down">组下移(J)</button>
+        </div>
+    </div>
+</div>
+<div id="doc" class="layout-page"><input value="layout-page"></div>
+<div class="panel option-panel-layout hide" id="option-layout">
+    <div class="panel-bd">
+		<div class="fm-item">
+            插入一行：
+            <button type="button" class="J-col-add" data-num="1">1列(A)</button>
+            <button type="button" class="J-col-add" data-num="2">2列</button>
+            <button type="button" class="J-col-add" data-num="3">3列</button>
+            <button type="button" class="J-col-add" data-num="4">4列</button>
+        </div>
+        <div class="fm-item" id="col-width-option">
+            设置宽度：<input id="col-width" />
+            或 <button type="button" id="col-width-modify-auto">自适应(W)</button>
+        </div>
+    </div>
+</div>
+
+<div class="bg-fullscreen-layer"></div>
+<div class="panel panel-code hide" id="dialog-code">
+    <div class="panel-hd"><h2 id="dialog-code-title">DOM结构</h2></div>
+    <div class="panel-bd">
+        <div>
+		    <textarea></textarea>
+        </div>
+        <div><button type="button" id="button-copy">复制</button> <button type="button" id="button-close">关闭</button></div>
+    </div>
+</div>
+<script type="text/javascript">
+//全局布局对象
+var oLayout = {
+    page: $("#doc")[0],
+	elSelectedLayout : '',
+    nGutter: 10,
+	classLayout: 'layout',
+	classSelectedLayout: 'layout-selected',
+    classLayoutGroup: 'layout-group',
+    cssRuleList:{},
+    classLayoutPattern: /^layout-\d+((-\d+)?|b)$/,
+	isPlugin : false //是否作为插件形式
+}
+
+//初始化绑定
+$(function(){
+    //绑定属性面板可拖动
+    $("#option-layout").draggable({ cursor: 'move' });
+
+    $("#dialog-code").draggable({ cursor: 'move' });
+    //绑定CODE可调节大小
+    $("#dialog-code").resizable({ handles: 'e' });
+
+    //初始化执行页面属性面板
+    layoutGenerator.setPageWidth($('#doc-width').val());
+    setGrid();
+    //绑定页面属性面板相关事件
+    //选择页面宽度
+    $("#doc-width").add($("#doc-width-input")).change(function(){
+        var width = $(this).val();
+        if(width === "input"){
+            $("#doc-width-input").show();
+        }else{
+            this.id !== "doc-width-input" && $("#doc-width-input").hide();
+            layoutGenerator.setPageWidth(width);
+        }
+    });
+    //选择栅格规格
+    function setGrid(){
+        var grid = $("#doc-grid").val(),
+            result = grid.match(/(\d+)x(\d+)-(\d+)/);
+        if(result){
+           var image = 'img/grid' + result[1] + '_' +result[3] + '.png';
+           oLayout.nGutter = parseInt(result[3]);
+           layoutGenerator.setGridBackground(image);
+           layoutGenerator.freshGutter();
+        }
+    }
+    $("#doc-grid").change(setGrid);
+    //获取DOM结构
+    $('#button-dom').add('#button-css').click(function(){
+        if(this.id.indexOf('css')>-1){
+            $('#dialog-code-title').html('CSS代码');
+            $('#dialog-code textarea').val(layoutGenerator.getLayoutCss());
+        }else{
+            $('#dialog-code-title').html('DOM结构');
+            $('#dialog-code textarea').val(layoutGenerator.getLayoutDom());
+        }
+        $('#dialog-code').show();
+        $('#option-layout').hide();
+
+    });
+    //关闭代码面板
+    $('#button-close').click(function(){
+        $('#dialog-code').hide();
+        $('#option-layout').show();
+
+    });
+    //关闭代码面板
+    $('#button-close').click(function(){
+        $('#dialog-code').hide();
+        $('#option-layout').show();
+
+    });
+    //隐藏显示布局class名
+    $('#button-toggle-name').click(function(){
+        $(oLayout.page).toggleClass('layout-hidename');
+        this.innerHTML = this.innerHTML.indexOf('隐藏')>-1 ? '显示布局class名': '隐藏布局class名'
+    });
+
+    //初始化属性面板相关绑定事件
+    //修改布局宽度：指定宽度
+    $('#col-width').keydown(function(event){
+        event.stopPropagation();
+    });
+    $('#col-width').keyup(function(event){
+        if(event.which === 40){$(this).val(parseInt($(this).val())-1)}
+        if(event.which === 38){$(this).val(parseInt($(this).val())+1)}
+        layoutGenerator.setLayoutWidth($('#col-width').val());
+    });
+    //修改布局宽度：智能填充
+    $('#col-width-modify-auto').click(function(){
+        layoutGenerator.setLayoutWidth('auto');
+    });
+    //新增子布局列数
+    $('.J-col-add').click(function(){
+        layoutGenerator.appendLayout($(this).attr('data-num'));
+    });
+    //新增子布局列数
+    $('#button-col-insert').click(function(){
+        layoutGenerator.insertLayout();
+    });
+    //左移
+    $('#button-col-left').click(function(){
+        $(oLayout.elSelectedLayout).insertBefore($(oLayout.elSelectedLayout).prev());
+        layoutGenerator.freshGutter();
+    });
+    //右移
+    $('#button-col-right').click(function(){
+        $(oLayout.elSelectedLayout).insertAfter($(oLayout.elSelectedLayout).next());
+        layoutGenerator.freshGutter();
+    })
+    //上移
+    $('#button-col-up').click(function(){
+        $(oLayout.elSelectedLayout).parent().insertBefore($(oLayout.elSelectedLayout).parent().prev('.' + oLayout.classLayoutGroup))
+    })
+    //下移
+    $('#button-col-down').click(function(){
+        $(oLayout.elSelectedLayout).parent().insertAfter($(oLayout.elSelectedLayout).parent().next('.' + oLayout.classLayoutGroup))
+    })
+    //删除
+    $('#button-col-del').click(function(){
+        if(window.confirm("确认删除该布局区域么？")){
+            layoutGenerator.delLayout();
+        }
+    })
+    //保存布局信息至父窗口
+    if(window.opener){
+		oLayout.isPlugin = true;
+        $('#button-dom').hide();
+        $('#button-css').hide();
+        $('#button-save').click(function(){
+            var htmlText = layoutGenerator.getLayoutDom(oLayout.isPlugin),
+                cssText = layoutGenerator.getLayoutCss();
+            window.opener && window.opener.fillLayout(htmlText,cssText);
+            alert('布局信息保存成功!');
+        });
+        $('#button-save').show();
+    }
+});
+
+//绑定键盘快捷
+$(document).keydown(function(event){
+    var key = event.which;
+	//输入框中的按键忽略掉
+	if(event.target.tagName === 'INPUT'){
+		event.stopPropagation();
+		return ;
+	}
+	//console.log(key)
+    if(oLayout.elSelectedLayout){
+        if(oLayout.elSelectedLayout !== oLayout.page){
+            //删除当前选择布局 delete d
+            if((key === 46 || key === 68) && window.confirm("确认删除该布局区域么？")){
+                layoutGenerator.delLayout();
+            }
+            //左,选择左布局
+            if(key === 37){
+                layoutGenerator.setSelectedLayout($(oLayout.elSelectedLayout).prev());
+            }
+            //右，选择右布局
+            if(key === 39){
+                layoutGenerator.setSelectedLayout($(oLayout.elSelectedLayout).next());
+            }
+            //上，选择兄弟层级
+            if(key === 38){
+                layoutGenerator.setSelectedLayout($('.layout:first',$(oLayout.elSelectedLayout).parent().prev()));
+            }
+            if(key === 40){
+                layoutGenerator.setSelectedLayout($('.layout:first',$(oLayout.elSelectedLayout).parent().next()));
+            }
+			//左移 h
+			if(key === 72){
+				$(oLayout.elSelectedLayout).insertBefore($(oLayout.elSelectedLayout).prev());
+				layoutGenerator.freshGutter();
+			}
+			//右移 l
+			if(key === 76){
+				$(oLayout.elSelectedLayout).insertAfter($(oLayout.elSelectedLayout).next());
+				layoutGenerator.freshGutter();
+			}
+			//上移 j
+			if(key === 75){
+				$(oLayout.elSelectedLayout).parent().insertBefore($(oLayout.elSelectedLayout).parent().prev('.' + oLayout.classLayoutGroup))
+			}
+			//下移 k
+			if(key === 74){
+				$(oLayout.elSelectedLayout).parent().insertAfter($(oLayout.elSelectedLayout).parent().next('.' + oLayout.classLayoutGroup))
+			}
+			//自动调整宽度 w
+			if(key === 87){
+				layoutGenerator.setLayoutWidth('auto');
+			}
+            if(key === 73){
+				layoutGenerator.insertLayout();
+			}
+        }
+    }
+});
+//设置浮出面板位置
+function setPropPanelPostion(left,top){
+    $('#option-layout').animate({left:left,top:top},300);
+}
+//绑定选择布局
+$("#doc").click(function(e){
+	var target = e.target;
+	while(target !== this && !$(target).hasClass(oLayout.classLayout)){
+		target = target.parentNode;
+	}
+    if(target.id === 'doc'){
+        $('#button-col-group button').attr('disabled',true);
+    }else{
+        $('#button-col-group button').each(function(n,el){
+            el.removeAttribute('disabled');// removeAttr IE7 bug
+        });
+    }
+	//选中最近的父级layout布局
+    layoutGenerator.setSelectedLayout(target);
+    $('#option-layout').removeClass('hide');
+
+    var position = $(target).offset();
+    setPropPanelPostion(position.left,position.top + target.offsetHeight);
+    $("#col-width").val(layoutGenerator.getLayout().width);
+});
+
+
+
+//布局对象
+var layoutGenerator = function(opt){
+	function _appendLayout(n){
+        var layoutWidth = [],
+            totalWidth = parseInt($(oLayout.elSelectedLayout).css("width")),
+            equalWidth = Math.floor((totalWidth - (n-1) * oLayout.nGutter)/n),
+            html = "";
+        for(var i=0 ; i<n-1 ; i++){
+            layoutWidth.push(equalWidth);
+        }
+        //最后一列采取精确计算差值
+        layoutWidth.push(totalWidth - (equalWidth + oLayout.nGutter)*(n-1));
+        html += '<div class="'+oLayout.classLayoutGroup+'">';
+        for(var j=0,html2='',suffix='';j<n;j++){
+            //已生成的布局个数，默认class名
+            if(j + 1 < n){
+                html2 = 'margin-right:' + oLayout.nGutter +'px;';
+                suffix = '-' + oLayout.nGutter;
+            }else{
+                html2 = '';
+                suffix = n == 1 ? 'b' : '';
+            }
+            html += '<div class="'+ oLayout.classLayout +'" style="float:left;width:'+ layoutWidth[j] +'px;'+ html2 +'"><input data-custom="0" value="'+ oLayout.classLayout +'-'+ layoutWidth[j] + suffix +'"></div>';
+        }
+        html += '</div>';
+        $(oLayout.elSelectedLayout).append(html);
+	}
+    function _insertLayout(){
+        var width = oLayout.elSelectedLayout.offsetWidth - oLayout.nGutter,aWidth = [];
+            aWidth.push(Math.floor(width/2));
+            aWidth.push(width - aWidth[0]);
+        $(oLayout.elSelectedLayout).css('width',aWidth[0]);
+            $(oLayout.elSelectedLayout).after('<div class="'+ oLayout.classLayout +'" style="float:left;width:'+ aWidth[1] +'px;margin-right:'+ oLayout.nGutter +'px"><input data-custom="0" value="'+ oLayout.classLayout +'-'+ aWidth[1] +'"></div>');
+        _freshGutter();
+    }
+    function _setSelectedLayoutWidth(width){
+        if(width === 'auto'){
+            var group = $(oLayout.elSelectedLayout.parentNode),
+                totalWidth = oLayout.elSelectedLayout.parentNode.offsetWidth,
+                tmpWidth = 0;
+            for(var i=0, child = group.children(),len = child.length;i<len;i++){
+                if(child[i] === oLayout.elSelectedLayout) continue;
+                tmpWidth += child[i].offsetWidth;
+            }
+
+            width = totalWidth - tmpWidth-oLayout.nGutter*(len-1);
+        }
+        $(oLayout.elSelectedLayout).css("width",width);
+    }
+    //刷新间距
+    function _freshGutter(){
+        $('.' + oLayout.classLayoutGroup +' .' + oLayout.classLayout).each(function(n,el){
+            if($(el).next().length == 0){
+                $(el).css("margin-right","");
+            }else{
+                $(el).css("margin-right",oLayout.nGutter);
+            }
+        });
+    }
+	//计算布局树结构
+	function _getLayoutTree(){
+		var cssList = [];
+			
+		function getLayoutList(layoutGroup){
+			var arr=[],childname = '';
+			for(var i =0,childrenLayout = $(layoutGroup).children('.' + oLayout.classLayout),len = childrenLayout.length; i< len ;i++){
+				childname = $($(childrenLayout[i]).children('input')[0]).val();
+				var group = $(childrenLayout[i]).children('.'+oLayout.classLayoutGroup);
+				if(group.length > 0){
+					var ar = [];
+					for(var j=0;j<group.length;j++){
+						ar.push(getLayoutList(group[j]));
+					}
+					arr.push({layoutname:childname,width:$(childrenLayout[i]).css("width"),grouplist:ar});
+				}else{
+					arr.push({layoutname:childname,width:$(childrenLayout[i]).css("width")});
+				}
+			}
+			return arr;
+		} 
+		$(oLayout.page).children('.'+oLayout.classLayoutGroup).each(function(index,el){
+			cssList.push(getLayoutList(el));
+		});
+		
+		var tree = {};
+			tree[$(oLayout.page).children('input').val()] = cssList;
+		return tree;
+	}
+    //自动更新布局className
+    function _refreshLayoutClass(el){
+        if(!el) return;
+        var curClass = $.trim($($(el).children('input')[0]).val());
+        if(oLayout.classLayoutPattern.test(curClass) || curClass == ''){
+            var prev = $(el).prev(),
+                next = $(el).next(),
+                width = el.offsetWidth;
+            if(prev.length === 0 && next.length === 0){
+                $($(el).children('input')[0]).val(oLayout.classLayout + '-' + width + 'b');
+            }else if(next.length === 0){
+                $($(el).children('input')[0]).val(oLayout.classLayout + '-' + width);
+            }else{
+                $($(el).children('input')[0]).val(oLayout.classLayout + '-' + width + '-' + oLayout.nGutter);
+            }
+
+        }
+
+    }
+    return {
+        //设置页面宽度
+        setPageWidth : function(width){
+            var result = width.match(/^\d+(px|%)?$/i);
+            if(result){
+                oLayout.page.style.width = result[1] ? width : result[0] +"px";
+            }
+        },
+        //设置栅格背景
+        setGridBackground: function(src){
+            oLayout.page.style.backgroundImage = "url("+ src +")";
+        },
+        //插入一行
+        appendLayout:function(n){
+            _appendLayout(n);
+        },
+        //插入一列
+        insertLayout:function(){
+            _insertLayout();
+        },
+        //删除布局
+        delLayout:function(){
+            var prev = $(oLayout.elSelectedLayout).prev(),
+                next = $(oLayout.elSelectedLayout).next();
+            if(prev.length === 0 && next.length === 0){
+                $(oLayout.elSelectedLayout).parent().remove();
+            }else{
+                $(oLayout.elSelectedLayout).remove();
+            }
+            this.freshGutter();
+        },
+        //设置布局块的宽度
+        setLayoutWidth : function(num){
+            _setSelectedLayoutWidth(num);
+        },
+        //获取当前选中的layout对象
+        getLayout: function(){
+            return {
+                width: oLayout.elSelectedLayout.offsetWidth,
+                'name': $("input:first",oLayout.elSelectedLayout).val()
+            }
+        },
+        //刷新gutter值
+        freshGutter : function(){
+            _freshGutter();
+        },
+        //设置当前被选中的布局块
+        setSelectedLayout : function(el){
+            if(el === oLayout.elSelectedLayout || (!$(el).hasClass(oLayout.classLayout) && el !== oLayout.page)) return ;
+            if(oLayout.elSelectedLayout !== ''){
+                $(oLayout.elSelectedLayout).removeClass(oLayout.classSelectedLayout);
+                _refreshLayoutClass(oLayout.elSelectedLayout);
+            }
+	        $(el).addClass(oLayout.classSelectedLayout);
+	        oLayout.elSelectedLayout = el;
+            $(el).focus();
+
+        },
+        //获取DOM结构
+        getLayoutDom : function(isPlugin){
+			var domTree = _getLayoutTree(),html = '',pagename = $(oLayout.page).children('input').val();
+			oLayout.classLayoutGroup = $('#layout-group-class').val();
+			//拼装DOM结构
+			function getDom(arr){
+				var html = [];
+				//空数组直接返回
+				if(arr.length === 0){return '';}
+				if($.isArray(arr)){
+					if($.isArray(arr[0])){
+						for(var i=0;i<arr.length;i++){
+							html.push(getDom(arr[i])); 
+						}
+					}else{
+						if(arr.length > 1){
+								html.push('<div class="' + oLayout.classLayoutGroup +'">\n')
+						}
+						for(var i=0;i<arr.length;i++){
+							html.push(getDom(arr[i])); 
+						}
+						
+						if(arr.length > 1){
+								html.push('</div>\n');
+						}
+					}
+				}else{
+
+					html.push('<div '+ (isPlugin ? 'data-container="1"': '') + 'class="' + arr.layoutname + '">');
+					if(arr.grouplist){
+						html.push(getDom(arr.grouplist))
+					}
+					html.push('</div>\n');
+				}
+				return html.join("");
+			}
+			html = '<div class="' + pagename + '">\n' + getDom(domTree[pagename]) + '</div>';
+			//增加HTML format
+			return style_html(html,1,'\t',80);	
+        },
+        //获取CSS代码
+        getLayoutCss : function(){
+            var cssCode = [];
+            oLayout.cssRuleList = {};
+            //装入group样式
+            cssCode.push('.'+ oLayout.classLayoutGroup +':after {content:"\\20";display:block;clear:both;height:0;}\n.'+ oLayout.classLayoutGroup + '{*zoom:1;}');
+            //检测CSS是否重复、命名合法
+            $('input',oLayout.page).each(function(index,el){
+                var ruleName = $.trim($(el).val()),
+                    ruleStyle = $(el.parentNode).attr("style");
+                //有兄弟节点的时候才保存样式，否则单行无须保存
+                if($(el.parentNode).prev().length > 0 || $(el.parentNode).next().length > 0 ){
+                    //如果存在同名的className
+                    if(oLayout.cssRuleList[ruleName]){
+                        if(oLayout.cssRuleList[ruleName] !== ruleStyle){
+                            layoutGenerator.setSelectedLayout(el.parentNode);
+                            cssCode.push('Error:布局中存在两个或两个以上不一致的 '+ ruleName + ' 声明，请修改！');
+                        }else{
+
+                        }
+                    }
+                    oLayout.cssRuleList[ruleName] = index !== 0 ? ruleStyle : 'margin: 0 auto; width: '+ $(oLayout.page).css("width");
+                }
+            });
+            for(var i in oLayout.cssRuleList){
+                cssCode.push(['.',i,'{',oLayout.cssRuleList[i],'}'].join(""));
+            }
+            return cssCode.join('\n');
+        },
+        //修改布局块样式名
+        modiLayoutClass: function(){
+            //$(oLayout.elSelectedLayout)
+        }
+    }
+}();
+
+</script>
+

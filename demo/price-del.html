@@ -1,0 +1,30 @@
+﻿---
+layout: demo
+title: 不同字体的删除线效果比较
+category: demo
+---
+
+
+<style type="text/css">
+p{color:#999;font-size:12px;}
+del{margin-left:30px;}
+</style>
+<h1>{{ page.title }}</h1>
+
+<script>	
+var fonts = ['arial','verdana','Tahoma','宋体','微软雅黑',
+		'sans serif','Arial Black','Arial Narrow','Georgia','Times New Roman',
+		'Trebuchet MS','Courier New','Impact','Comic Sans MS','serif',
+		'Courier','Lucida Sans Unicode','Lucida Console','Garamond',
+		'MS Sans Serif','MS Serif','Palatino Linotype','Symbol','Bookman Old Style'];
+		
+
+	for(var j=0, len=fonts.length;j<len;j++){
+		var hexColor = j.toString(16), 
+			hexColor = hexColor.length > 1 ?  hexColor +'e' : '62' + hexColor;
+		document.write('<p><span style="font-family:\'' + fonts[j] + '\';color:#' + hexColor + '">8080.80 <del>8080.80</del></span>（' + fonts[j] +'）</p>');
+	}
+
+	document.write('<p>当前操作系统与浏览器：</p>');
+	document.write(navigator.userAgent);
+</script>
