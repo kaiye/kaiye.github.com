@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>半透明层样式生成器</title>
+<style>
+.ffc,pre{font-family:courier new,courier,monospace;}
+html,body{height:100%;overflow:hidden;}
+html,body,pre,h1{padding:0;margin:0;}
+::selection {background-color:#669900;color:#FFFFFF;}
+::-moz-selection {background-color:#669900;color:#FFFFFF;}
+a{color:#CCCCCC;}
+body{background-color:#fff;font:12px/1.5 '微软雅黑';background:#000 url(http://mat1.gtimg.com/www/mb/stheme/outsideofwindow/outsideofwindow.jpg) no-repeat top center;}
+.doc{overflow:hidden;padding:20px;width:1024px;height:682px;margin:123px auto 0;background:#fff url(http://farm3.staticflickr.com/2547/4047703256_da98ffdcdf_b.jpg) no-repeat center center;}
+.code{font-size:16px;background-color:#333;color:#fff;padding:20px;word-wrap:break-word;word-break:break-all;height:642px;overflow:hidden;}
+.setting-wrap{position:absolute;width:100%;height:100px;box-shadow:0 1px 2px rgba(0,0,0,.5);top:0;left:0;}
+.setting{padding:10px 0;width:1064px;margin:0 auto;}
+.setting-wrap{background-color:rgba(0, 0, 0, 0.8);filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr="#cc000000", EndColorStr="#cc000000");color:#c9c9c9}
+.setting-wrap:not(s){filter:none;}
+h1{color:#999999;font-size:20px;text-shadow: 2px 2px 2px rgba(0, 0, 0, .75);margin-bottom:15px;font-style:italic;}
+.input{background:#1E1E1E;border-style:solid;border-width:1px;border-color:#0F0F0F #0F0F0F #4B4B4B #0F0F0F;border-radius:3px;color:#999999;width:60px;}
+.input-long{width:220px;}
+.button{margin-left:20px;vertical-align:middle;}
+
+/* 按钮动画效果 */
+.button { background: #222; display: inline-block; padding: 5px 15px 6px; color: #fff !important; font-size: 13px; font-weight: bold; line-height: 1; text-decoration: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25); -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25); text-shadow: 0 -1px 1px rgba(0,0,0,0.25); border-bottom: 1px solid rgba(0,0,0,0.25); position: relative; cursor: pointer; overflow: visible; width: auto; }
+button::-moz-focus-inner { border: 0; padding: 0; }
+.button:hover { background-color: #111; color: #fff; }
+.button:active { -webkit-transform: translateY(1px); -moz-transform: translateY(1px); }
+.large.button { font-size: 14px; padding: 8px 19px 9px; }
+.green.button { background-color: #91bd09; }
+.green.button:hover { background-color: #749a02; }
+.large.super.button { background-position: left bottom; -webkit-border-radius: 18px; -moz-border-radius: 18px; }
+.large.super.button span { font-size: 14px; padding: 7px 20px 9px; -webkit-border-radius: 17px; -moz-border-radius: 17px; }
+@-webkit-keyframes greenPulse {
+  from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+  50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+  to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+}
+a.button {-webkit-animation-duration: 2s;-webkit-animation-iteration-count: infinite; }
+.green.button { -webkit-animation-name: greenPulse; -webkit-animation-duration: 3s; }
+/* 浮层动画效果 */
+.animated {
+	-webkit-animation-fill-mode: both;
+	-moz-animation-fill-mode: both;
+	-ms-animation-fill-mode: both;
+	-o-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation: 1s ease;
+	-moz-animation: 1s ease;
+	-ms-animation: 1s ease;
+	-o-animation: 1s ease;
+	animation: 1s ease;
+}
+@-webkit-keyframes bounceIn {
+	0% {opacity: 0;-webkit-transform: scale(.3);}
+	50% {opacity: 1;-webkit-transform: scale(1.05);}
+	70% {-webkit-transform: scale(.9);}
+	100% {-webkit-transform: scale(1);}
+}
+@-moz-keyframes bounceIn {
+	0% {opacity: 0;-moz-transform: scale(.3);}
+	50% {opacity: 1;-moz-transform: scale(1.05);}
+	70% {-moz-transform: scale(.9);}
+	100% {-moz-transform: scale(1);}
+}
+.bounceIn {
+    -webkit-animation-name: bounceIn;
+    -moz-animation-name: bounceIn;
+    -ms-animation-name: bounceIn;
+    -o-animation-name: bounceIn;
+    animation-name: bounceIn;
+}
+</style>
+</head>
+<body>
+<div class="doc">
+<pre id="code" class="code animated">
+基于《<a href="http://sofish.de/1916" target="_blank">背景半透明最佳实践</a>》方法所修改的样式生成工具，如有BUG请<a target="_blank" href="http://t.qq.com/weiweixiao">@猫哥</a>
+</pre>
+</div>
+
+<div class="setting-wrap">
+	<div class="setting">
+	<h1>半透明层样式生成器</h1> 
+	背景色：#<input type="text" class="ffc input" id="bgColor" value="000" />
+	透明度：<input type="text" class="ffc input" id="alpha" value="60" />% 
+	文字色：#<input type="text" class="ffc input" id="txtColor" value="fff" />
+	样式名：<input type="text" class="ffc input input-long" id="bgClass" value=".alpha-layer" />
+	<a id="generate" href="###" class="large green button">点击预览</a>
+	</div>
+</div>
+<script>
+function $id(id){
+	return document.getElementById(id);
+}
+function $appendStyle(cssText){
+    var elStyle = document.createElement("style");
+    elStyle.setAttribute("type", "text/css");
+    if(elStyle.styleSheet){// IE
+        elStyle.styleSheet.cssText = cssText;
+    } else {// w3c
+        var tmpText = document.createTextNode(cssText);
+        elStyle.appendChild(tmpText);
+    }
+    document.getElementsByTagName("head")[0].appendChild(elStyle);
+};
+//相关正则
+var re = {
+	color: /^([0-9A-F]{3}|[0-9A-F]{6})$/i,
+	trim: /^\s*|\s*$/g,
+	alpha: /^([1-9]?[0-9]|100)$/
+};
+//code区域样式
+var codeClass = $id('code').className;
+
+$id('generate').onclick = function(){
+	var bgColor = $id('bgColor').value.replace(re.trim,''),
+		txtColor = $id('txtColor').value.replace(re.trim,''),
+		alpha = $id('alpha').value.replace(re.trim,''),
+		bgClass = $id('bgClass').value,
+		errorInfo = '',
+		isError = false;
+	
+	var hex = r = g = b = alphaHex = '';
+	
+	//检查输入格式
+	if(!re.color.test(bgColor)){ isError = true; errorInfo += '<p>请输入16进制背景色值，如000</p>'; }
+	if(!re.color.test(txtColor)){ isError = true; errorInfo += '<p>请输入16进制文字色值，如fff</p>'; }
+	if(!re.alpha.test(alpha)){ isError = true; errorInfo += '<p>请输入0-100之间的数值</p>';}
+	//打印出错信息，退出函数
+	if(isError){
+		$id('code').innerHTML = errorInfo;
+		return;
+	}else{
+	};
+	
+	//数值转换
+	hex = bgColor.length == 3 ? Array(3).join(bgColor.substring(0,1)) + Array(3).join(bgColor.substring(1,2)) + Array(3).join(bgColor.substring(2,3)): bgColor;
+	
+	r = parseInt(hex.substring(0,2),16);
+	g = parseInt(hex.substring(2,4),16);
+	b = parseInt(hex.substring(4,6),16);
+	
+	alpha = alpha / 100 ;
+	alphaHex = Math.floor(alpha * 255).toString(16);
+	
+	//CSS样式模版
+	var tpl1 = '{background-color:transparent;background-color:rgba('+ r +', ' + g +', '+ b +', '+ alpha +');filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr="#'+ alphaHex + hex +'", EndColorStr="#'+ alphaHex + hex +'");color:#'+ txtColor +'}',
+		tpl2 = ':not(s){filter:none;}/* IE9+ filter reset */';
+	
+	$id('code').innerHTML = bgClass + tpl1 + '<br/>' + bgClass + tpl2;
+	$appendStyle('.code' + tpl1 + '.code' + tpl2);
+	//没用的动画
+	$id('code').className = codeClass + ' bounceIn';
+	setTimeout(function(){
+		$id('code').className = codeClass;
+	},1000)
+	
+	return false;
+}
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11506434-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</body>
+</html>
+
