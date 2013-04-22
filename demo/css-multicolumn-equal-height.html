@@ -1,0 +1,49 @@
+---
+layout: demo
+title: CSS实现两栏等高
+category: blog
+custom_css: |
+  <style type="text/css">
+  #content{width:800px;overflow:hidden; zoom:1;}
+  pre{
+  	font-weight: bold;
+  	color: green;
+  }
+  #main{width:580px; margin-bottom:-2012px; padding-bottom:2012px; background:#eee; float:left;}
+  #aside{width:210px; margin-bottom:-2012px; padding-bottom:2012px; background:#bbb; float:right;}
+  </style>
+---
+
+<div id="container">
+	<h1>{{page.title}}</h1>
+    <div id="content">
+		<div id="main">左边栏的CSS：
+			<pre>
+	#main{
+		width:580px;
+		margin-bottom:-2012px;
+		padding-bottom:2012px;
+		background:#eee;
+		float:left;
+	}
+			</pre>
+			<p>我如果在这里放个广告位不知道会不会有人点。哈哈</p>
+			<p>1号广告位坑</p>
+			<p>2号广告位坑</p>
+			<p>3号广告位坑</p>
+			<p>4号广告位坑</p>
+		</div>
+		<div id="aside">右边栏的CSS：
+			<pre>
+#aside{
+  width:210px;
+  margin-bottom:-2012px;
+  padding-bottom:2012px;
+  background:#bbb;
+  float:right;
+}
+			</pre>
+		</div>
+	</div>
+	<p>返回叶落花开：<a href="http://yekai.net/">http://yekai.net</a></p>
+</div>

@@ -1,0 +1,34 @@
+---
+layout: demo
+title: 人民币符号不同字体比较
+category: demo
+custom_css: |
+  <style>
+  div{display:inline-block;*zoom:1;*display:inline;margin-right:5em;font-size:12px;}
+  .des{color:#999;}
+  </style>
+---
+
+<h1>{{page.title}}</h1>
+<p class="des">（双横实体符号在 gb2312/gbk 文档中会被强制转换为单横实体）</p>
+<script>
+var rmbH = ['双横实体：¥ \\xa5','单横实体：￥','特殊字符：&yen;'],
+  rmb = ['¥','￥','&yen;'];
+  
+var fonts = ['arial','verdana','Tahoma','宋体','微软雅黑',
+    'sans serif','Arial Black','Arial Narrow','Georgia','Times New Roman',
+    'Trebuchet MS','Courier New','Impact','Comic Sans MS','serif',
+    'Courier','Lucida Sans Unicode','Lucida Console','Garamond',
+    'MS Sans Serif','MS Serif','Palatino Linotype','Symbol','Bookman Old Style'];
+    
+for(var i=0;i<rmb.length;i++){
+  document.write('<div><h2>'+ rmbH[i] +'</h2>');
+  for(var j=0, len=fonts.length;j<len;j++){
+    var hexColor = j.toString(16), 
+      hexColor = hexColor.length > 1 ?  hexColor +'e' : '62' + hexColor;
+    document.write('<p style="font-family:\'' + fonts[j] + '\';color:#' + hexColor + '">' + new Array(5).join(rmb[i]) +' （' + fonts[j] +'）</p>');
+  }
+  document.write('</div>');
+}
+
+</script>

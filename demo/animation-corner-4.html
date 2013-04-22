@@ -1,0 +1,25 @@
+---
+layout: demo
+title: 动画角标Flash版
+category: blog
+custom_css: |
+  <style type="text/css">
+  body{width:500px;margin:0 auto;padding:20px;font-size:14px;}
+  h1{font-size:100%;}
+  .container{position:relative;margin-bottom:20px;border:1px solid #eee;padding:10px;height:200px;}
+  .corner-ad{position:absolute;top:0;right:0;width:120px;height:120px;}
+  </style>
+---
+
+<div class="container">
+<h1>{{page.title}}</h1>
+<div id="cornerAd" class="corner-ad"><embed src="assets/corner.swf" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"  wmode="transparent" allowscriptaccess="always" quality="high" width="120" height="120" FlashVars="url=http://t.qq.com/weiweixiao&pic=http://t0.qlogo.cn/mbloghead/ce1dbda08969ddd2a5ea/120&callback=closeCornerAd" ></embed></div>
+<script>
+/* Flash点击关闭后的回调函数 */
+function closeCornerAd(){
+    document.getElementById('cornerAd').style.display = 'none';
+}
+</script>
+</div>
+
+<p>返回<a href="http://yekai.net/">叶落花开</a></p>

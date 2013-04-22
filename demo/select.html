@@ -1,0 +1,47 @@
+---
+layout: demo
+title: select宽度自适应及expression优化的问题
+description: IE CSS expression对性能的影响
+category: blog
+custom_css: |
+  <style>
+  /* 
+    补充：
+    1、实测发现这里把width赋值为auto会导致浏览器假死 
+    2、所有浏览器都不支持option的ellipsis效果 
+  */
+
+  .select1{max-width:200px;*width: expression(counter('1'),(this.offsetWidth > 200) ? '200px' : this.offsetWidth + 'px');}
+  .select2{max-width:200px;*width: expression(function(el){el.style.width = el.offsetWidth > 200 ? '200px' : el.offsetWidth + 'px';counter('2');}(this));}
+
+  input{color:#f00;font-weight:bold;}
+  </style>
+---
+
+未优化的expression执行次数: <input id="num1" value="0" /><br>
+优化过后expression执行次数: <input id="num2" value="0" />
+<hr>
+未优化的expression
+<select class="select1">
+	<option>满100送50</option>
+	<option>满200送400</option>
+	<option title="小荷才露尖尖角，一枝红杏出墙来。欢少你让人太失望了">小荷才露尖尖角，一枝红杏出墙来。欢少你太让人失望了</option>
+	<option title="IE6不支持option的title">IE6不支持option的title</option>
+</select>
+
+优化过的expression
+<select class="select2">
+	<option>满100送50</option>
+	<option>满200送400</option>
+	<option title="小荷才露尖尖角，一枝红杏出墙来。欢少你让人太失望了">小荷才露尖尖角，一枝红杏出墙来。欢少你让人太失望了</option>
+	<option title="IE6不支持option的title">IE6不支持option的title</option>
+</select>
+
+<script>
+//计数器
+function counter(index){
+	document.getElementById('num' + index).value = document.getElementById('num' + index).value - 0 + 1;
+}
+</script>
+<br><br><br>
+<p>返回《<a href="http://yekai.net/">叶落花开</a>》</p>

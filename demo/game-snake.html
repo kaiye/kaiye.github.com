@@ -1,0 +1,386 @@
+---
+layout: demo
+title: JAVASCRIPT小游戏-贪吃蛇
+category: game
+custom_css: |
+  <style type="text/css">
+  .fn-clear:after{
+    clear:both;
+    content:'.';
+    display:block;
+    height:0;
+    visibility:hidden;
+  }
+
+  .fn-clear{
+    zoom:1;
+  }
+  body,ul,li{
+    margin:0;
+    padding:0;
+    font-size: 12px;
+  }
+  h1{
+    text-align: center;
+    margin: 10px 0;
+  }
+  .com-playground ul,.com-actionpanel{
+    border: 8px solid #660099;
+    margin: 0 auto;
+    width: 600px;
+  }
+  .com-actionpanel{
+    border: none;
+    padding: 10px;
+  }
+  .com-actionpanel dl{
+    width: 300px;
+    float: left;
+  }
+  .block li{
+    width:30px;
+    height: 30px;
+    list-style-type: none;
+    float: left;
+    background: transparent;
+    display: block;
+  }
+
+  .block .snake{
+    background-color: #CC0099;
+  }
+  .block .food{
+    background-color: #99FF00;
+  }
+  .score{
+    font-size: 18px;
+    color: #f00;
+    font-weight: bold;
+  }
+  </style>  
+---
+
+  <h1>{{page.title}}</h1>
+
+  <div id="J_playground" class="com-playground block">
+  <!-- 游戏界面会生成到含id=J_playground的元素里 -->
+  </div>
+  <div class="com-actionpanel">
+    <dl>
+      <dt>贪吃程度：</dt>
+      <dd>
+        <ul>
+
+        <li>已吃掉<span class="score" id="J_nSnakeLen">0</span>只青蛙
+        </li>
+        <li>吃青蛙的速度：<span class="score" id="J_speed">200</span>毫秒/只</li>
+        </ul>
+      </dd>
+    </dl>
+    <dl>
+
+      <dt>游戏说明：</dt>
+      <dd>
+        <ul>
+        <li>
+          <ul class="block fn-clear">
+            <li class="snake">蛇</li>
+            <li class="food">青蛙</li>
+
+          </ul>
+        </li>
+        <li>
+          按方向键开始移动，空格键暂停
+        </li>
+        </ul>
+      </dd>
+    </dl>
+    <dl>
+
+      <dt>参数配置：</dt>
+      <dd>
+        <ul>
+          <li>舞台大小：<input type="text" value="20" size="2" id="J_nY" />列 x <input type="text" value="10" size="2" id="J_nX" />排</li>
+          <li>初始速度：<input type="text" value="200" size="3" id="J_nDefaultSpeed" />毫秒为间隔</li>
+          <li><input type="button" value="保存配置并重新开始" id="J_btnSetOptions" /></li>
+
+        </ul>
+        
+      </dd>
+    </dl>
+    <dl>
+      <dt>游戏状态：</dt>
+      <dd>
+        <p id="J_gamestatus" class="score">准备开始</p>
+        <div><input type="button" value="重新开始" id="J_restartBtn" /></div>
+
+      </dd>
+    </dl>
+  </div>
+<p>返回叶落花开：<a href="http://yekai.net/">http://yekai.net</a></p>
+<script  type="text/javascript">
+
+var CATGE = {}
+
+/**
+ * 贪吃蛇小游戏
+ * 
+ * @author catge QQ:965496
+ * @name CATGE.tcs 
+ * @function
+ * @param {String} example 
+ * @return void
+ */
+
+CATGE.tcs = function(){
+  var _options = {
+    nX : 10, //排数
+    nY : 20, //列数
+    nLiWidth : 30, //单个像素点宽度
+    nDefaultSpeed : 200, //初始化速度
+    classSnake: 'snake',
+    classFood: 'food',
+    oPlayGround : document.getElementById('J_playground')
+  }
+  //像素点集合数组
+  var aLi = new Array();
+  //贪吃蛇
+  var snake = new Array();
+  //蛇长
+  var nSnakeLen = 1;
+  //移动方向、预载移动方向
+  var direction = preDirection = [0,1];
+  //移动速度
+  var speed = _options.nDefaultSpeed;
+  //是否在移动、是否暂停、是否已经绑定过事件
+  var bHasBegin = bPause = bHasInit =  false;
+  //计时器
+  var timer;
+  /**
+   * 生成地图
+   * @function _createMap
+   * @return (void)
+   * @private
+   */
+  var _createMap = function(){
+    if(typeof map != 'undefined'){
+      _options.oPlayGround.removeChild(map);
+    }
+    //地图对象map
+    map = document.createElement("ul");
+    
+    for(var i=0;i<_options.nX;i++){
+      aLi[i] = new Array();
+      for(var j=0;j<_options.nY;j++){
+        var li = document.createElement("li");
+        aLi[i][j] = li;
+        map.appendChild(li);
+      }
+    }
+    map.style.width = _options.nLiWidth * _options.nY +'px';
+    map.style.height = _options.nLiWidth * _options.nX +'px';
+    _options.oPlayGround.appendChild(map);
+  }
+  /**
+   * 生成贪吃蛇
+   * @function _createSnake
+   * @return (void)
+   * @private
+   */
+  var _createSnake = function(){
+    var x = Math.floor(Math.random()*_options.nX);
+    var y = Math.floor(Math.random()*_options.nY);
+    
+    snake = [[x,y]];
+    //蛇长
+    nSnakeLen = snake.length;
+    for(var i=nSnakeLen - 1;i>-1;i--){
+      var x = snake[i][0];
+      var y = snake[i][1];
+      aLi[x][y].className = _options.classSnake;
+    }
+  }
+  /**
+   * 生成食物
+   * @function _createFood
+   * @return (void)
+   * @private
+   */
+  var _createFood = function(){
+    var x = Math.floor(Math.random()*_options.nX);
+    var y = Math.floor(Math.random()*_options.nY);
+
+    if(aLi[x][y].className !=  _options.classSnake && aLi[x][y].className !=  _options.classFood){
+      aLi[x][y].className = _options.classFood;
+    }else{
+      _createFood();
+    }
+  }
+  /**
+   * 蛇移动
+   * @function _createFood
+   * @return (void)
+   * @private
+   */
+  var _moveSnake = function(){
+    _syncStatus();
+    bHasBegin = true;
+    direction = preDirection;
+    var nextX = snake[0][0]+direction[0];
+    var nextY = snake[0][1]+direction[1];
+    
+    if(nextX>_options.nX -1 || nextY>_options.nY -1 || nextX<0 || nextY<0 ||aLi[nextX][nextY].className==_options.classSnake){
+      _gameOver();
+      return ;
+    }
+    
+    snake.unshift([nextX,nextY])
+  
+    if(aLi[nextX][nextY].className==_options.classFood){
+      _createFood();
+    }else{
+      aLi[snake[nSnakeLen][0]][snake[nSnakeLen][1]].className='';
+      snake.pop();
+    }
+    
+    aLi[nextX][nextY].className=_options.classSnake;
+    nSnakeLen = snake.length;
+    _changeSpeed(nSnakeLen);
+    
+    timer = window.setTimeout(_moveSnake,speed);
+
+  
+  }
+  /**
+   * 状态同步
+   * @function _syncStatus
+   * @return (void)
+   * @private
+   */
+  var _syncStatus = function(){
+    document.getElementById("J_nSnakeLen").innerHTML = nSnakeLen - 1;
+    document.getElementById("J_speed").innerHTML = speed;
+    
+      document.getElementById("J_gamestatus").innerHTML = "进行中…";
+  }
+  /**
+   * 改变移动速度
+   * @function _changeSpeed
+   * @return (void)
+   * @private
+   */
+  var _changeSpeed = function(n){
+    speed = _options.nDefaultSpeed - parseInt(n/10)*25;
+  }
+  /**
+   * 改变移动方向
+   * @function _changePreDirection
+   * @return (void)
+   * @private
+   */
+  var _changePreDirection = function(keycode){
+    switch(keycode){
+      case 37:
+      //为什么 direction == [0,1]不成立
+        preDirection = (direction[0] == 0 && direction[1] == 1 && nSnakeLen !=1)?[0,1]:[0,-1];
+           break;
+      case 38:
+        preDirection = (direction[0] == 1 && direction[1] == 0&& nSnakeLen !=1)?[1,0]:[-1,0];
+           break;
+         break;
+         case 39:
+        preDirection = (direction[0] == 0 && direction[1] == -1&& nSnakeLen !=1)?[0,-1]:[0,1];
+           break;
+         case 40:
+        preDirection = (direction[0] == -1 && direction[1] == 0&& nSnakeLen !=1)?[-1,0]:[1,0];
+           break;
+         default:
+           break;
+     }
+  }
+  /**
+   * 游戏结束
+   * @function _gameOver
+   * @return (void)
+   * @private
+   */
+  var _gameOver = function(){
+    document.getElementById("J_gamestatus").innerHTML = "游戏结束";
+    document.getElementById("J_restartBtn").style.display = "block";
+  }
+  /**
+   * 绑定按键事件
+   * @function _bindEvents
+   * @return (void)
+   * @private
+   */
+  var _bindEvents = function(){
+    
+    if(bHasInit) return;
+    
+    bHasInit = true;
+    document.onkeydown = document.body.onkeydown = function(e){
+      var ev=window.event || e; 
+      var keycode = ev.keyCode||ev.which||ev.charCode;
+        if(keycode ==32 &&bHasBegin){
+          bPause = bPause?false: true;
+          if(!bPause){
+            timer = window.setTimeout(_moveSnake,speed);
+          }
+        }
+        if(bPause){
+          window.clearTimeout(timer);
+          document.getElementById("J_gamestatus").innerHTML = "已暂停…";
+          return;
+        }else{
+        if(keycode ==37 ||keycode ==38||keycode ==39||keycode ==40 ){
+            _changePreDirection(keycode);
+          if(!bHasBegin){
+            _moveSnake();
+          }
+        }
+      }
+    }
+    
+  }
+  return{
+    restart : function(){
+      
+      bHasBegin = false;
+      _createMap();
+      _bindEvents();
+      _createSnake();
+      _createFood();
+      
+      document.getElementById("J_gamestatus").innerHTML = "准备开始";
+      document.getElementById("J_restartBtn").style.display = "none";
+
+    },    
+    
+    /**
+     * 参数设置
+     * @function renew
+     * @return (void)
+     * @public
+     */
+    setOptions : function(){
+      _options.nX = document.getElementById("J_nX").value;
+      _options.nY = document.getElementById("J_nY").value;
+      _options.nDefaultSpeed = document.getElementById("J_nDefaultSpeed").value;
+    }
+    
+  }
+}();
+
+CATGE.tcs.restart();
+
+document.getElementById("J_btnSetOptions").onclick = function(){
+  CATGE.tcs.setOptions();
+  CATGE.tcs.restart();
+}
+document.getElementById("J_restartBtn").onclick = function(){
+  CATGE.tcs.restart();
+}
+
+
+</script>

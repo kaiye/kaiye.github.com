@@ -1,0 +1,64 @@
+---
+layout: demo
+title: 梦幻西游修炼计算器
+category: game
+description: 计算梦幻西游修炼所花金币数
+custom_css: |
+  <style type="text/css">
+  label {
+  display: block;
+  padding: 0.5em 0;
+  }
+  </style>  
+---
+<h1>{{page.title}}</h1>
+<form id="XLcalc">
+<label>请选择修炼类型：
+<select id="type">
+<option value="3" selected="selected">法术攻击</option>
+<option value="2">法术防御</option>
+<option value="3">物理攻击</option>
+<option value="2">物理防御</option>
+<option value="3">猎术修炼</option>
+</select>
+</label>
+<label>请选择开始层数：
+<input type="text" value="0" size="3" id="bl" />
+层
+</label>
+<label>请选择结束层数：
+<input type="text" value="1" size="3" id="el" />
+层
+</label>
+<label>所需金钱数：
+<input type="text" value="45" size="5" id="total" disabled="disabled" />
+万MHB
+</label>
+</form>
+<p>返回叶落花开：<a href="http://yekai.net/">http://yekai.net</a></p>
+<script type="text/javascript">
+var bl = document.getElementById("bl");
+var el = document.getElementById("el");
+var total = document.getElementById("total");
+var type = document.getElementById("type");
+bl.onchange = XLcalc;
+el.onchange = XLcalc;
+type.onchange = XLcalc;
+
+//Coded by catge.blogbus.com
+function XLcalc(){
+var k = type.options[type.selectedIndex].value;
+var blValue = parseInt(bl.value);
+var elValue = parseInt(el.value);
+var totalValue = 0;
+if(blValue<0||elValue>25||elValue<blValue) return false;
+for(var i= blValue+1;i<elValue+1;i++){
+totalValue += LevelMoneyCalc(i);
+}
+total.value = totalValue*k;
+}
+
+function LevelMoneyCalc(mhb){
+return (mhb==0)?0:mhb*mhb+3*mhb+11;
+}
+</script>

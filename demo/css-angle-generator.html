@@ -1,0 +1,153 @@
+---
+layout: demo
+title: CSS angle Generator
+category: game
+description: CSS三角形生成工具
+custom_css: |
+  <style>   
+  ul, ol { list-style: none;margin: 0; 
+      padding: 0;
+  }
+  body .group,body .clear {*zoom:1;}
+  body .group:after,body .clear:after {content:'\20';display:block;clear:both;height:0;}
+  .step li{
+      margin:20px 0;
+      }
+  .angle-box{
+           width:0;
+          height:0;
+          overflow:hidden;
+          font-size:0;
+          display:inline-block;
+      border-width:20px;
+      border-style:solid;
+      border-color:#fa0 #FF4086 #00D0FF #9BBD1C;
+      float:left;
+      margin-right:10px;
+      }
+      .angle-select{margin:20px;}
+
+      .angle-select li{
+          margin:0 10px 15px 0;
+          float:left;
+          padding:20px;
+          cursor:pointer;
+          border:2px solid #fff; 
+      }
+      .angle-select li.current{
+          border-color:#ddd;
+      }
+
+    pre{
+        border:2px solid #ddd;
+        background-color:#f1f1f1;
+        font-family:"courier new";
+        width:600px;
+        padding:20px;
+        }  
+  </style>
+---
+
+    <div class="angle-box"></div>
+    <h1>{{page.title}}</h1>
+
+
+    <ol class="step">
+        <li>设置大小<input type="text" id="width" value="20px"></li>
+        <li>设置颜色<input type="text" id="color" value="#c00"></li>
+        <li><button type="button" onclick="generateAngle();">生成样式</button></li>
+        <li>点击选择你需要的形状
+            <ul class="group angle-select" id="angleList">
+            
+            </ul>
+        </li>
+       
+    </ol>
+ 
+    <h2>CSS样式：</h2>
+    <pre id="angleCssPrev"></pre> 
+    <script>
+// http://legos.paipaioa.com/php/dictionary.php#fid=1321
+function $appendStyle(cssText){
+    var elStyle = document.createElement("style");
+    elStyle.setAttribute("type", "text/css");
+    if(elStyle.styleSheet){// IE
+        elStyle.styleSheet.cssText = cssText;
+    } else {// w3c
+        var tmpText = document.createTextNode(cssText);
+        elStyle.appendChild(tmpText);
+    }
+    document.getElementsByTagName("head")[0].appendChild(elStyle);
+};
+//模版生成替换引擎 by kaiye
+applyTemplate = function(motherTemplate,templateVars){
+    var template = motherTemplate;
+    var re = '';
+    for(i in templateVars){
+        re = new RegExp("<%=" + i + "%>","g");
+        template = template.replace(re,templateVars[i]);
+    }
+    return template;
+}
+
+//生成三角样式
+   function generateAngle(){
+        width = document.getElementById("width").value;
+        color = document.getElementById("color").value;
+        $appendStyle(applyTemplate(cssText,{"color":color,"width":width}))
+    }
+//绑定li
+var width = document.getElementById("width").value;
+var color = document.getElementById("color").value;
+var cssText = "";//生成的CSS样式
+
+(function(){
+        var cssPre = document.getElementById("angleCssPrev");
+        var angleBase = "width:0;height:0;overflow:hidden;font-size:0;display:inline-block;";
+        var angleType = {
+            t : "border-width:<%=width%>;border-color:<%=color%> transparent transparent transparent;border-style:solid dashed dashed dashed;",
+            r : "border-width:<%=width%>;border-color:transparent <%=color%> transparent transparent;border-style:dashed solid dashed dashed;",
+            b : "border-width:<%=width%>;border-color:transparent transparent <%=color%> transparent;border-style: dashed dashed solid dashed;",
+            l : "border-width:<%=width%>;border-color: transparent transparent transparent <%=color%>;border-style: dashed dashed dashed solid;",
+            lt : "border-left:<%=width%> solid <%=color%>;border-top:<%=width%> dashed transparent;",
+            lb : "border-left:<%=width%> solid <%=color%>;border-bottom:<%=width%> dashed transparent;",
+            rt : "border-right:<%=width%> solid <%=color%>;border-top:<%=width%> dashed transparent;",
+            rb : "border-right:<%=width%> solid <%=color%>;border-bottom:<%=width%> dashed transparent;"
+        }
+
+        var ulId = "angleList";
+        var ul = document.getElementById(ulId);
+        var fragment = document.createDocumentFragment();
+
+       for(var angle in angleType){
+           var li = document.createElement("li");
+           var span = document.createElement("span");
+           
+           span.className = angle;
+           cssText += "#"+ ulId + " ." + angle + "{" + angleBase +  angleType[angle]+"}";
+
+           li.appendChild(span);
+           fragment.appendChild(li);
+
+       }
+        ul.appendChild(fragment); 
+
+        var aLi = ul.getElementsByTagName("li");
+        
+        for(var i=0,len = aLi.length;i<len;i++){
+            (function(n){
+                  aLi[n].onclick = function(){
+                      for(var j=0;j<len;j++){aLi[j].className=""}
+                      //选中当前li
+                        aLi[n].className ="current";
+                        //生成样式
+                        var angle = aLi[n].getElementsByTagName("span")[0].className;
+                        var html = angleBase + applyTemplate(angleType[angle],{"width":width,"color":color}); 
+                         cssPre.innerHTML = html.replace(/;/g,";<br>");
+                       
+                  };
+            })(i);
+        }
+})();
+
+    </script>

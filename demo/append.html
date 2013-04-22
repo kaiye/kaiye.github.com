@@ -1,0 +1,11 @@
+---
+layout: demo
+title: IE6 append body Bug
+category: demo
+description: window.onload还未触发前就操作body的DOM结构，IE6下会悲剧
+---
+
+<p id="p0">window.onload还未触发前就操作body的DOM结构，IE6下会悲剧- -！
+<script>
+document.body.appendChild(document.createElement('div'));
+</script>

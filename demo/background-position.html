@@ -1,0 +1,187 @@
+---
+layout: demo
+title: Background-Position 转换器
+category: demo
+description: 本工具用来按偏移量/缩放比重新计算background-position值
+custom_css: |
+  <style type="text/css" media="screen">
+  p{margin:0;padding:10px 0;}
+  body{background:#3D3E42;font-family:微软雅黑;line-height:1.5;color:#F8F8F2;padding:20px;}
+  h1{color:#F8F8F2;text-shadow:1px 2px 0 #000;text-align:center;}
+  input{width:50px;}
+  input,textarea{border:1px solid #141517;background:#37383C;border-radius:3px;height:24px;line-height:24px;box-shadow:inset 0 1px 1px  #2D2E30, 0 1px 0 #4C4D51;color:#F92672;padding-left:5px;font-family:"Courier New";text-shadow:0 1px 0 #000;}
+  button{height:28px;border:1px solid #141517;border-radius:10px;background-color:#414449;box-shadow:inset 0 1px 1px  #62656A, 0 1px 0 #4C4D51;color:#F8F8F2;font-size:12px;padding-left:10px;padding-right:10px;cursor:pointer;margin:0 3px;
+  background: rgb(78,81,86); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(78,81,86,1) 0%, rgba(54,55,59,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(78,81,86,1)), color-stop(100%,rgba(54,55,59,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(78,81,86,1) 0%,rgba(54,55,59,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(78,81,86,1) 0%,rgba(54,55,59,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(78,81,86,1) 0%,rgba(54,55,59,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(78,81,86,1) 0%,rgba(54,55,59,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e5156', endColorstr='#36373b',GradientType=0 ); /* IE6-9 */
+  }
+  button:active{
+  background: #36373b; /* Old browsers */
+  background: -moz-linear-gradient(top,  #36373b 0%, #4e5156 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#36373b), color-stop(100%,#4e5156)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #36373b 0%,#4e5156 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #36373b 0%,#4e5156 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #36373b 0%,#4e5156 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #36373b 0%,#4e5156 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36373b', endColorstr='#4e5156',GradientType=0 ); /* IE6-9 */
+
+  }
+  legend{color:#F8F8F2;}
+  fieldset{border:1px solid #333;padding:10px 20px;margin:0 10px 20px;}
+  .page{width:1100px;margin:0 auto;}
+  .control{border:1px solid #141517;border-radius:10px;background-color:#464749;box-shadow:inset 0 1px 1px  #62656A, 0 1px 0 #4C4D51;color:#eee;font-size:14px;padding:15px;margin-bottom:15px;}
+  .option{float:left;width:472px;}
+  .readonly{box-shadow:none;background:#424448;border-color:#333;}
+  .item{margin:10px 0;}
+  .do{padding:10px 0;text-align:center;clear:both;}
+  .do button{min-width:150px;border-radius:5px;height:32px;}
+  .source{overflow:hidden;*zoom:1;}
+  .code{width:500px;height:300px;overflow:auto;}
+  .input{float:left;}
+  .output{float:right;}
+  .output input{width:100px;}
+  .copy{text-align:center;margin-top:40px;font-size:12px;color:#999;}
+  .copy a{color:#999;}
+  ::-webkit-scrollbar{ width:10px;} 
+  ::-webkit-scrollbar-track-piece{ background-color:#37383C;} 
+  ::-webkit-scrollbar-thumb{ background-color:rgba(17,17,17,.5); border-radius:5px; } 
+  @media handheld, only screen and (max-width: 1100px) {
+    .page {
+      width:564px;
+    }
+    .source p{text-align:center;}
+    .input{float:none;}
+    .output{float:none;}
+    .code{width:555px;}
+  }
+
+  </style>
+---
+
+	<div class="page">
+    <h1>{{page.title}}</h1>
+	<div class="control">
+		<fieldset class="option"> 
+		  <legend>缩放比：原图大小 与 background-size 的比值</legend> 
+			<div class="item">
+				宽 : <input id="imgWidth" value="200"> 高 : <input id="imgHeight" value="200"> / background-size : <input id="sizeX" value="100"> px <input id="sizeY" value="100"> px
+			</div>
+			<div class="item">
+				  ScaleX : <input id="scaleX" value="" class="readonly" readonly> ScaleY : <input id="scaleY" value="" class="readonly" readonly> <button type="reset" onclick="scaleReset(1)" >Reset 1</button>
+				   <button type="reset" onclick="scaleReset(2)" >Reset 2</button>
+			</div>
+		</fieldset>
+		<fieldset class="option"> 
+		  <legend>偏移量：新坐标 - 原坐标（取两张sprite图的开始坐标点，正值）</legend> 
+			<div class="item">
+				OffsetX : <input id="newX" value="0"> - <input id="oldX" value="0"> = <input id="offsetX" value="" class="readonly" readonly> <button type="reset" onclick="offsetReset('X')">Reset 0</button>
+			</div>
+			<div class="item">
+				OffsetY : <input id="newY" value="0"> - <input id="oldY" value="0"> = <input id="offsetY" class="readonly" readonly value="" > <button type="reset" onclick="offsetReset('Y')" >Reset 0</button>
+			</div>
+		</fieldset>
+		
+		<div class="do"><button type="button" onclick="run();">RUN</button></div>
+		
+	</div>
+    
+	<div class="source">
+		<div class="input">
+			<p>Source</p>
+			<textarea class="code" id="oldCode">
+.icon1{background-position:0 0;}
+.icon2{background-position:-20px -50px;}
+.icon3{background-position:-40px -100px;}
+.icon4{background-position:-60px -150px;}
+.icon5{background-position:-80px -200px;}
+.icon6{background-position:-100px -250px;}
+.icon7{background-position:-120px -300px;}
+			</textarea>		
+		</div>
+		<div class="output">
+			<p>Result <input id="prefix" value=".prefix "></p>
+			<textarea class="code" id="newCode"></textarea>
+		</div>
+	</div>
+
+	<div class="copy">
+		<a href="http://yekai.net">&copy;叶落花开</a>
+	</div>
+
+    
+</div>	
+
+<script>
+function $id(str){
+	return document.getElementById(str);
+}
+
+//重置偏移量
+function offsetReset(d){
+	$id('new' + d).value = $id('old' + d).value = $id('offset' + d).value = '0';
+}
+
+//重置缩放比
+function scaleReset(x){
+	$id('sizeX').value = $id('sizeY').value = '1';
+	$id('imgWidth').value = $id('imgHeight').value = x;
+	$id('scaleX').value = $id('scaleY').value = (x - 0).toFixed(1);
+}		
+		
+function run(){
+	var oldX = parseInt($id("oldX").value, 10),
+		oldY = parseInt($id("oldY").value, 10),
+		newX = parseInt($id("newX").value, 10),
+		newY = parseInt($id("newY").value, 10),
+		imgWidth = parseInt($id("imgWidth").value, 10),
+		imgHeight = parseInt($id("imgHeight").value, 10),
+		sizeX = $id("sizeX").value,
+		sizeY = $id("sizeY").value,
+		oldCode = $id("oldCode"), 
+		newCode = $id("newCode"),
+		prefix = $id('prefix').value,
+		scaleX,
+		scaleY,
+		result;
+		
+	var offsetX = newX - oldX,
+		offsetY = newY - oldY;
+		
+		
+		if(sizeX === 'auto' && sizeY === 'auto'){
+			scaleX = scaleY = 1;
+		}else{
+			if(sizeX === 'auto'){
+				scaleX = scaleY = (parseInt(imgHeight, 10) / sizeY).toFixed(1);
+			}else if(sizeY === 'auto'){
+				scaleY = scaleX = (parseInt(imgWidth, 10) / sizeX).toFixed(1);
+			}else{
+				scaleX = (parseInt(imgWidth, 10) / sizeX).toFixed(1);
+				scaleY = (parseInt(imgHeight, 10) / sizeY).toFixed(1);
+			}
+		}
+		
+		//set
+		$id('scaleX').value = scaleX;
+		$id('scaleY').value = scaleY;
+		$id('offsetX').value = offsetX;
+		$id('offsetY').value = offsetY;
+		//calc
+		result =  oldCode.value.replace(/(background\-position\:)\s*([-0-9]+)(?:px)?\s+([-0-9]+)(?:px)?;/g, function(match, bp, x, y){
+			var _x = Math.round(parseInt(x, 10) / scaleX) - offsetX;
+			var _y = Math.round(parseInt(y, 10) / scaleY) - offsetY;
+		
+			return bp + _x + (_x === 0 ? " " : "px ") + _y + (_y === 0 ? ";" : "px;"); 
+		});
+		//add prefix
+		result = result.replace(/[^\r\n\{]+{[^}]*}/g, function(match){
+			return prefix + match;
+		});
+		newCode.value = result;	
+} 
+</script>

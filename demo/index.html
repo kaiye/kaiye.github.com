@@ -1,5 +1,24 @@
 ---
 layout: demo
 title: DEMO列表
+custom_css: |
+  <style>
+  body{line-height:1.8;font-size:14px;}
+  .description{color:#666;font-size:12px;}
+  </style>
 ---
-{{site.pages}}
+<h1>{{site.title}}：{{page.title}}</h1>
+
+Hello {{ 'tobi' | upcase }}
+Hello tobi has {{ 'tobi' | size }} letters!
+Hello {{ '*tobi*' | textilize | upcase }}
+Hello {{ 'now' | date: "%Y %h" }}
+<!-- 
+<ul>
+{% for demo in site.pages %}
+{% if demo != page %}
+<li><a href="{{demo.url}}">{{demo.title}}</a> | <span class="description">[{{demo.category}}] {% if demo.description%}{{demo.description}}{% else %}{{demo.url}}{% endif %}</span></li>
+{% endif %}
+{% endfor %}
+</ul> -->
+

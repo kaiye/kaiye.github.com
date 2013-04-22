@@ -1,0 +1,80 @@
+---
+layout: demo
+title: 动画角标CSS3版
+category: blog
+custom_css: |
+  <style type="text/css">
+  body{width:500px;margin:0 auto;padding:20px;font-size:14px;}
+  div{position:relative;margin-bottom:20px;border:1px solid #eee;padding:10px;}
+  h1{font-size:100%;}
+
+  .corner-ad{position:absolute;top:0;right:0;width:26px;height:16px;background-repeat:no-repeat;text-indent:-499px;overflow:hidden;}
+  .corner-ad{background-image:url(http://pics3.paipaiimg.com/update/20120405/index_114817745.png);background-position:right 0;}
+  .corner-ad:hover{width:57px;height:36px;background-position:right -108px;}
+
+  .corner-ad-1:hover{
+  -webkit-animation: cornerad 0.3s step-start;
+  -moz-animation: cornerad 0.3s step-start;
+  -ms-animation: cornerad 0.3s step-start;
+  -o-animation: cornerad 0.3s step-start;
+  animation: cornerad 0.3s step-start;
+  }
+
+  .corner-ad-2:hover{
+  -webkit-animation: cornerad 0.3s ;
+  -moz-animation: cornerad 0.3s ;
+  -ms-animation: cornerad 0.3s ;
+  -o-animation: cornerad 0.3s ;
+  animation: cornerad 0.3s ;
+  }
+
+  @-webkit-keyframes cornerad
+  {
+    0% {background-position: right 0;}
+    33%{background-position: right -36px;}
+    67%{background-position: right -72px;}
+    100% {background-position: right -108px;}
+  }
+  @-moz-keyframes cornerad{
+    0% {background-position: right 0;}
+    33%{background-position: right -36px;}
+    67%{background-position: right -72px;}
+    100% {background-position: right -108px;}
+  }
+  @-ms-keyframes cornerad,{
+    0% {background-position: right 0;}
+    33%{background-position: right -36px;}
+    67%{background-position: right -72px;}
+    100% {background-position: right -108px;}
+  }
+  @-o-keyframes cornerad,{
+    0% {background-position: right 0;}
+    33%{background-position: right -36px;}
+    67%{background-position: right -72px;}
+    100% {background-position: right -108px;}
+  }
+  @keyframes cornerad{
+    0% {background-position: right 0;}
+    33%{background-position: right -36px;}
+    67%{background-position: right -72px;}
+    100% {background-position: right -108px;}
+  }
+
+  </style>
+---
+<h1>{{page.title}}</h1>
+<div>
+<!--[if lt IE 10]>
+<strong>亲，该DEMO不支持当前浏览器，用chrome或者Firefox试试。</strong>
+<![endif]-->
+
+<p>animation-timing-function为step-start的效果正确。</p>
+<a class="corner-ad corner-ad-1" href="http://www.paipai.com" >拍拍网</a>
+</div>
+
+<div>
+<p>animation-timing-function默认为ease的效果不对。</p>
+<a class="corner-ad corner-ad-2" href="http://www.paipai.com" >拍拍网</a>
+</div>
+
+<p>返回<a href="http://yekai.net/">叶落花开</a></p>

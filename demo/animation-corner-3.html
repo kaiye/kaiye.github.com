@@ -1,0 +1,71 @@
+---
+layout: demo
+title: 动画角标JS版
+category: blog
+custom_css: |
+  <style type="text/css">
+  body{width:500px;margin:0 auto;padding:20px;font-size:14px;}
+  div{position:relative;margin-bottom:20px;border:1px solid #eee;padding:10px;}
+  h1{font-size:100%;}
+
+  .corner-ad{position:absolute;top:0;right:0;width:26px;height:16px;background-repeat:no-repeat;text-indent:-499px;overflow:hidden;}
+  .corner-ad{background-image:url(http://pics3.paipaiimg.com/update/20120405/index_114817745.png);background-position:right 0;}
+  .corner-ad:hover{width:57px;height:36px;}
+  </style>
+---
+
+<script type="text/javascript">
+/**
+ * gifHover 鼠标移上时执行动画
+ * @param {element} el 当前hover对象
+ * @param {init} step 单帧场景的高度
+ * @param {init} num 动画帧数
+ * @param {init} speed 动画速度
+ * @param {init} x backgroundPositionX的取值
+ * @param {init} y backgroundPositionY的取值
+ * @author kaiye
+ */
+function gifHover(el,step,num,speed,x,y){
+  //如果没有定义背景X对齐方式，则取值（left、right）
+  if(x == undefined){
+    //取backgroundPositionX值
+    if (el.currentStyle){
+      //IE可以直接取
+      x = el.currentStyle['backgroundPositionX'];
+    }else if (window.getComputedStyle){
+      //Firefox、Chrome
+      x = document.defaultView.getComputedStyle(el,null)['backgroundPosition'].replace(/\s\S+$/,'');
+    }
+  }
+  //缓存到自定义属性，方便gifReset调用
+  el.dataX = x;
+  //如果动画未执行到最后一帧，则继续执行到下一帧
+  if(--num){  
+    //动画指针，方便gifReset调用
+    el.dataTimer = setTimeout(function(){
+      //Y坐标
+      y = y || -step;
+      el.style.backgroundPosition = x + ' ' + y +'px';
+      //回调自身
+      gifHover(el,step,num,speed,x,y-step);
+    },speed || 50);
+  }
+}
+function gifReset(el){
+  //重置到第一帧
+  el.style.backgroundPosition = el.dataX + ' 0';
+  //清除未执行完的动画队列
+  if(el.dataTimer){
+    clearTimeout(el.dataTimer);
+    el.dataTimer = null;
+  }
+}
+</script>
+
+
+<div>
+<h1>{{ page.title }}</h1>
+<a class="corner-ad" href="http://www.paipai.com" onmouseover="gifHover(this,36,4)" onmouseout="gifReset(this)" >拍拍网</a>
+</div>
+
+<p>返回<a href="http://yekai.net/">叶落花开</a></p>

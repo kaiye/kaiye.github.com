@@ -1,0 +1,30 @@
+#ppRefreshControl *{font: 12px/1.5 arial;margin:0;padding:0;text-align:left;color:#fff;}
+#ppRefreshControl{position:fixed;_position:absolute;top:0;left:0;color:#fff;z-index:10001;padding:10px;_width:300px;
+    -webkit-transition: all 0.4s ease-out;
+    -moz-transition: all 0.4s ease-out;
+    -o-transition: all 0.4s ease-out;
+    -ms-transition: all 0.4s ease-out;
+    transition: all 0.4s ease-out;
+}
+#ppRefreshControl{
+    background:rgba(0, 0, 0, 0.7);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr='#b2000000', EndColorStr='#b2000000');
+}
+:root #ppRefreshControl{
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr='#00000000', EndColorStr='#00000000');
+}
+#ppRefreshControl.open{width:auto;height:auto;}
+
+#ppRefreshControl.close h2,#ppRefreshControl.close div{display:none;}
+#ppRefreshControl.close {width:20px;height:20px;}
+#ppRefreshControl li{margin-bottom:5px;list-style-type:none;max-width:414px;overflow:hidden;}
+#ppRefreshControl label{color:#999;}
+#ppRefreshControl input[type=checkbox]{vertical-align:-2px;margin-right:5px;}
+#ppRefreshControl label{display:inline}
+#ppRefreshControl textarea{line-height:1.5;height:54px;min-width:200px;width:95%;_width:200px;border:1px solid #000;color:#fff;background:transparent none;}
+#ppRefreshControl h2{margin-bottom:10px;height:18px;line-height:1.5}
+#ppRefreshSwitcher{background:green;font-weight:normal;cursor:pointer;padding:1px 3px;border-radius:3px;margin-left:5px;display:inline;}
+#ppRefreshSwitcher.off{background:#a00;}
+#ppRefreshControl .pointer{background:#a00;}
+#ppRefreshControl .win{position:absolute;right:10px;top:7px;cursor:pointer;width:20px;height:20px;line-height:20px;text-align:center;font-family:verdana;font-size:14px;}
+#ppRefreshRate{width:50px;margin:0 3px;border:1px solid #000;color:#fff;background:transparent none;}

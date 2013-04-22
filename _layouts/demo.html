@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<title>{{site.categories.CATEGORY}}: {{ page.title }} | 叶落花开</title>
-	{{page.custom_css}}
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <meta charset="utf-8" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="author" content="{{ site.author }}" />{% if page.description %}
+  <meta name="description" content="{{ page.description }}" />{% endif %}
+  {{page.custom_css}}
+  {% if page.jquery %}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>{% endif %}
 </head>
 
 <body>
 {{ content }}
-
-<script type="text/javascript" src="http://tajs.qq.com/stats?sId=22006513" charset="UTF-8"></script>
+{% if site.tracker %}
+{% include tracker.html %}
+{% endif %}
 </body>
 </html>

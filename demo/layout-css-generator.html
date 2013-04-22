@@ -1,131 +1,130 @@
 ---
 layout: demo
 title: 通用布局生成器
+description: 实现任意组合的float布局
 category: tool
+jquery: true
+custom_css: |
+  <style>
+  body, h1, h2, h3, h4, h5, h6,  p, blockquote,
+  dl, dt, dd, ul, ol, li,
+  pre,
+  form, fieldset, legend, button, input, textarea,
+  th, td, figure {
+      margin: 0;
+      padding: 0;
+  }
+  body,
+  button, input, select, textarea {
+      font: 12px/1.5 arial;
+  }
+  h1, h2, h3, h4, h5, h6,button, input, select, textarea { font-size: 100%; }
+  address, cite, dfn, em, var { font-style: normal; }
+  code, kbd, pre, samp { font-family: courier new, courier, monospace; }
+  small { font-size: 12px; }
+
+  ul, ol { list-style: none; }
+
+  a { text-decoration: none;}
+  a:hover { text-decoration: underline; }
+
+  sup { vertical-align: text-top; }
+  sub { vertical-align: text-bottom; }
+
+  legend { color: #000; }
+  fieldset, img { border: 0; }
+
+  table { border-collapse: collapse; border-spacing: 0; }
+  .group,.clear {*zoom:1;}
+  .group:after,.clear:after {content:'\20';display:block;clear:both;height:0;}
+  body .hide{display:none;}
+  /*
+   * jQuery UI Resizable 1.8.15
+   *
+   * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+   * Dual licensed under the MIT or GPL Version 2 licenses.
+   * http://jquery.org/license
+   *
+   * http://docs.jquery.com/UI/Resizable#theming
+   */
+  .ui-resizable { position: relative;}
+  .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+  .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+  .ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+  .ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+  .ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+  .ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+  .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+  .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+  .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+  .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+
+  /* 自定义原子CSS */
+  .left{float:left;}
+  .right{float:right;}
+          /* 配置面板 */
+          .panel{border:1px solid #808080;border-radius:2px;position:absolute;
+          box-shadow:3px 3px 0 rgba(128,128,128,0.2);background-color:#F2F2F2;}
+          .panel-hd{background: #ffffff; /* Old browsers */
+  background: -moz-linear-gradient(top, #ffffff 0%, #dddddd 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Opera11.10+ */
+  background: -ms-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* IE10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
+  background: linear-gradient(top, #ffffff 0%,#dddddd 100%); /* W3C */
+          height:24px;
+          line-height:24px;
+          text-align:center;
+              border-bottom:1px solid #cccccc;
+          }
+          .panel-bd{padding:10px;color:#333;}
+          .panel-hd h2{text-shadow:1px 1px 0 #fff;color:#000;}
+
+          .option-panel-layout{
+              width:280px;
+              top:450px;
+              left:400px;
+          }
+          .option-panel-page{
+              position:static;
+              border-width:0 0 1px 0;
+          }
+          .option-panel-page fieldset{display:inline-block;margin-right:10px;}
+          .option-panel-layout fieldset{margin-bottom:10px;}
+          .panel legend{text-shadow:1px 1px 0 #fff;color:#333;padding-bottom:5px;}
+          .panel select{min-width:60px;}
+          .panel button{padding:3px 5px;}
+          .panel input{width:40px;}
+          .panel-code{width:560px;left:50%;margin-left:-200px;top:250px;}
+          .panel-code textarea{width:100%;height:360px;margin-bottom:10px;font-family:'Courier New';background-color:#002B36;border:1px solid #ddd;color:#4A8800;font-size:14px;}
+          .fm-item{padding-bottom:10px;}
+
+          .child-col-width-list label{display:inline-block;margin-bottom:5px;text-shadow:1px 1px 0 #fff;}
+          .child-col-width-list input{margin-left:5px;}
+
+          /* 布局示例样式 */
+          .layout-page{margin:0 auto;background:#efefef;min-height:200px;padding-bottom:100px;text-align:center;font:40px/1 "微软雅黑";color:#333;
+          margin-top:20px;border-top:2px solid #fff;}
+          .layout{min-height:100px;margin-bottom:10px;text-align:center;font-size:smaller;}
+          .layout-group:after{content:'\20';display:block;clear:both;height:0;}
+          .layout-group{*zoom:1;*margin-bottom:10px;}
+      .layout-selected{outline:2px solid #39f;}
+          #doc .layout-selected{*background-color:#39f;}
+          #doc.layout-selected{*border:2px solid #39f;}
+          .layout-page input{display:block;background:transparent;text-align:center;width:100%;border:none;line-height:1;color:#333;padding:3px 0 5px 0;font-family:'Courier New';}
+          .layout input:focus,.layout-page input:focus {outline: 0}
+          .layout{background:rgb(179,217,255);background:rgba(179,217,255,0.6);}
+          .layout .layout{background:#B3EFAA;background:rgba(179,239,170,0.6);}
+          .layout .layout .layout{background:#333;background:rgba(51,51,51, 0.6);}
+          .layout .layout .layout input{color:#fff;}
+          .layout .layout .layout .layout{background:#000;background:rgba(0,0,0, 0.6);}
+          .layout .layout .layout .layout .layout{background-color:#FBC5D8;background:rgba(251,197,216,0.5)}
+
+          .layout-hidename input{visibility:hidden;}
+  </style>
 ---
 
-<script type="text/javascript" src="js/htmlformat.js"></script>
-<script type="text/javascript" src="js/layout-css-generator-jqueryui.js"></script>
-    <style>
-body, h1, h2, h3, h4, h5, h6,  p, blockquote,
-dl, dt, dd, ul, ol, li,
-pre,
-form, fieldset, legend, button, input, textarea,
-th, td, figure {
-    margin: 0;
-    padding: 0;
-}
-body,
-button, input, select, textarea {
-    font: 12px/1.5 arial;
-}
-h1, h2, h3, h4, h5, h6,button, input, select, textarea { font-size: 100%; }
-address, cite, dfn, em, var { font-style: normal; }
-code, kbd, pre, samp { font-family: courier new, courier, monospace; }
-small { font-size: 12px; }
-
-ul, ol { list-style: none; }
-
-a { text-decoration: none;}
-a:hover { text-decoration: underline; }
-
-sup { vertical-align: text-top; }
-sub { vertical-align: text-bottom; }
-
-legend { color: #000; }
-fieldset, img { border: 0; }
-
-table { border-collapse: collapse; border-spacing: 0; }
-.group,.clear {*zoom:1;}
-.group:after,.clear:after {content:'\20';display:block;clear:both;height:0;}
-body .hide{display:none;}
-/*
- * jQuery UI Resizable 1.8.15
- *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Resizable#theming
- */
-.ui-resizable { position: relative;}
-.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
-.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
-.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
-.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
-.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
-.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
-.ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
-.ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
-.ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
-.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
-
-/* 自定义原子CSS */
-.left{float:left;}
-.right{float:right;}
-        /* 配置面板 */
-        .panel{border:1px solid #808080;border-radius:2px;position:absolute;
-        box-shadow:3px 3px 0 rgba(128,128,128,0.2);background-color:#F2F2F2;}
-        .panel-hd{background: #ffffff; /* Old browsers */
-background: -moz-linear-gradient(top, #ffffff 0%, #dddddd 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* Opera11.10+ */
-background: -ms-linear-gradient(top, #ffffff 0%,#dddddd 100%); /* IE10+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dddddd',GradientType=0 ); /* IE6-9 */
-background: linear-gradient(top, #ffffff 0%,#dddddd 100%); /* W3C */
-        height:24px;
-        line-height:24px;
-        text-align:center;
-            border-bottom:1px solid #cccccc;
-        }
-        .panel-bd{padding:10px;color:#333;}
-        .panel-hd h2{text-shadow:1px 1px 0 #fff;color:#000;}
-
-        .option-panel-layout{
-            width:280px;
-            top:450px;
-            left:400px;
-        }
-        .option-panel-page{
-            position:static;
-            border-width:0 0 1px 0;
-        }
-        .option-panel-page fieldset{display:inline-block;margin-right:10px;}
-        .option-panel-layout fieldset{margin-bottom:10px;}
-        .panel legend{text-shadow:1px 1px 0 #fff;color:#333;padding-bottom:5px;}
-        .panel select{min-width:60px;}
-        .panel button{padding:3px 5px;}
-        .panel input{width:40px;}
-        .panel-code{width:560px;left:50%;margin-left:-200px;top:250px;}
-        .panel-code textarea{width:100%;height:360px;margin-bottom:10px;font-family:'Courier New';background-color:#002B36;border:1px solid #ddd;color:#4A8800;font-size:14px;}
-        .fm-item{padding-bottom:10px;}
-
-        .child-col-width-list label{display:inline-block;margin-bottom:5px;text-shadow:1px 1px 0 #fff;}
-        .child-col-width-list input{margin-left:5px;}
-
-        /* 布局示例样式 */
-        .layout-page{margin:0 auto;background:#efefef;min-height:200px;padding-bottom:100px;text-align:center;font:40px/1 "微软雅黑";color:#333;
-        margin-top:20px;border-top:2px solid #fff;}
-        .layout{min-height:100px;margin-bottom:10px;text-align:center;font-size:smaller;}
-        .layout-group:after{content:'\20';display:block;clear:both;height:0;}
-        .layout-group{*zoom:1;*margin-bottom:10px;}
-		.layout-selected{outline:2px solid #39f;}
-        #doc .layout-selected{*background-color:#39f;}
-        #doc.layout-selected{*border:2px solid #39f;}
-        .layout-page input{display:block;background:transparent;text-align:center;width:100%;border:none;line-height:1;color:#333;padding:3px 0 5px 0;font-family:'Courier New';}
-        .layout input:focus,.layout-page input:focus {outline: 0}
-        .layout{background:rgb(179,217,255);background:rgba(179,217,255,0.6);}
-        .layout .layout{background:#B3EFAA;background:rgba(179,239,170,0.6);}
-        .layout .layout .layout{background:#333;background:rgba(51,51,51, 0.6);}
-        .layout .layout .layout input{color:#fff;}
-        .layout .layout .layout .layout{background:#000;background:rgba(0,0,0, 0.6);}
-        .layout .layout .layout .layout .layout{background-color:#FBC5D8;background:rgba(251,197,216,0.5)}
-
-        .layout-hidename input{visibility:hidden;}
-    </style>
-</head>
-<body id="layout">
 <div class="panel option-panel-page" id="option-page">
     <div class="panel-bd group">
         <div class="left">
@@ -193,6 +192,8 @@ background: linear-gradient(top, #ffffff 0%,#dddddd 100%); /* W3C */
         <div><button type="button" id="button-copy">复制</button> <button type="button" id="button-close">关闭</button></div>
     </div>
 </div>
+<script type="text/javascript" src="js/htmlformat.js"></script>
+<script type="text/javascript" src="js/layout-css-generator-jqueryui.js"></script>
 <script type="text/javascript">
 //全局布局对象
 var oLayout = {
