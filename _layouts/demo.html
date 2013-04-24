@@ -5,6 +5,10 @@
   <title>{{ page.title }} | {{ site.title }}</title>
   <meta name="author" content="{{ site.author }}" />{% if page.description %}
   <meta name="description" content="{{ page.description }}" />{% endif %}
+  <style type="text/css">
+.site-info{border-top: 1px solid #ededed;padding:24px 0;margin-top: 30px;text-align: center;color:#686868;font-size: 12px;}
+.site-info a{color: #686868;}
+  </style>
   {{page.custom_css}}
   {% if page.jquery %}<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>{% endif %}
 </head>
@@ -14,5 +18,10 @@
 {% if site.tracker %}
 {% include tracker.html %}
 {% endif %}
+<footer>
+  <div class="site-info"><a href="http://yekai.net">叶落花开</a> &copy; 
+          <a href="https://github.com/kaiye/kaiye.github.com/tree/master{{page.url}}">Proudly powered by Github</a>
+  </div>
+</footer>
 </body>
 </html>

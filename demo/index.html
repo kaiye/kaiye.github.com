@@ -6,19 +6,19 @@ custom_css: |
   body{line-height:1.8;font-size:14px;}
   .description{color:#666;font-size:12px;}
   </style>
+categories: [tool, demo, blog, game]
 ---
+{% raw %}
+{% assign sorted_pages = site.pages|sort:'url' %}
+{% endraw %}
+{{ page.url | split: '/' | first}}
 <h1>{{site.title}}：{{page.title}}</h1>
-
-Hello {{ 'tobi' | upcase }}
-Hello tobi has {{ 'tobi' | size }} letters!
-Hello {{ '*tobi*' | textilize | upcase }}
-Hello {{ 'now' | date: "%Y %h" }}
-<!-- 
 <ul>
-{% for demo in site.pages %}
-{% if demo != page %}
-<li><a href="{{demo.url}}">{{demo.title}}</a> | <span class="description">[{{demo.category}}] {% if demo.description%}{{demo.description}}{% else %}{{demo.url}}{% endif %}</span></li>
-{% endif %}
+{% for category in page.categories %}
+  {% for demo in site.pages %}
+  {% if page.url != demo.url and demo.category == category %}
+  <li><a href="{{demo.url}}">{{demo.title}}</a> | <span class="description">[{{category | capitalize}}] {% if demo.description%}{{demo.description}}{% else %}{{demo.url | replace_first:'/demo/',''}}{% endif %}</span></li>
+  {% endif %}
+  {% endfor %}
 {% endfor %}
-</ul> -->
-
+</ul>
