@@ -8,9 +8,11 @@ custom_css: |
   </style>
 categories: [tool, demo, blog, game]
 ---
+<!--
 {% raw %}
 {% assign sorted_pages = site.pages|sort:'url' %}
 {% endraw %}
+-->
 {{ page.url | split: '/' | first}}
 <h1>{{site.title}}：{{page.title}}</h1>
 <ul>
