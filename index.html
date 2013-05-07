@@ -4,6 +4,7 @@
 <style type="text/css">
 body{background:#000;font:12px/1.5 arial;color:#333;}
 .page{width:1024px;margin:20px auto;text-align:center;}
+.hide{display:none;}
 a{color:#999;}
 </style>
 <div class="page">
@@ -11,4 +12,9 @@ a{color:#999;}
 <p>叶落花开 / 花落叶发 / 忘川彼岸 / 曼珠沙华 </p>
 <p><a href="http://www.cnblogs.com/kaiye/">Blog</a> - <a href="demo/">Demo</a> - <a href="#about">About</a></p>
 <p>Yekai.net &copy; Proudly powered by Github.</p>
+</div>
+<div class="hide">
+{% if site.tracker %}
+{% include tracker.html %}
+{% endif %}
 </div>
