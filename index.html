@@ -8,7 +8,7 @@ layout: blank
 *{padding: 0;margin: 0;}
 body{background:#000;font:12px/1.5 arial;color:#333;}
 .page{width:1024px;margin:0 auto 20px;text-align:center;}
-img{height:680px;}
+img{height:680px;position: relative;z-index: -2}
 p{line-height: 1.85;}
 a{color:#999;}
 #world{
@@ -19,6 +19,7 @@ a{color:#999;}
     pointer-events: none;
     width:100%;
     height:100%;
+    z-index: -1;
 }
 @media screen and (max-height: 770px) {
     img{height:500px;}
