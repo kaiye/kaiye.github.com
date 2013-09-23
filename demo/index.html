@@ -5,7 +5,38 @@ custom_css: |
   <style>
   body{line-height:1.8;font-size:14px;}
   .description{color:#666;font-size:12px;}
+  *{margin:0;padding:0;}
+  body{font:14px/1.8 微软雅黑;background-color: #EAEAEA;color: #333;}
+  ul,li{list-style: outside none;}
+  header{background-color: #fff;border-bottom: 1px solid #DDDDDD;margin-bottom: 20px;}
+  .header-wrap{max-width:1500px;margin:0 auto; padding:0 30px;*zoom:1;overflow: hidden;height:70px;}
+  h1{float:left;line-height: 70px;}
+  nav{float:right;margin-top: 17px;}
+  nav a{float:left;display:block;padding:5px 10px;text-decoration: none;text-transform:uppercase;margin-left: 10px;color: #222;font-weight: bold;}
+  nav a:hover,nav a.on{background-color: #333333;color: #fff;}
+
+  .grid{max-width:1500px;margin:0 auto; padding:0 30px;}
+  .grid a{text-decoration: none;}
+  .grid li{margin-bottom: 20px;width:285px;background-color: #fff;}
+  .grid img{width:255px;padding:15px;}
+  .grid .thumb{display:block;width:205px;overflow:hidden;min-height:174px;text-align: center;padding:20px 40px;
+    background: #add9e4;
+    background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #add9e4));
+    background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+    background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+    background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+    background: radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+    background-color: #f7fbfc; 
+  }
+  .grid .text{font-size: 45px;line-height: 1.2;color: #333;}
+  .grid p{font-size: 20px;padding: 15px 20px;}
+
+
+  footer{background-color: #DDDDDD;}
+  .site-info{font-size: 16px;color: #222;}
   </style>
+  <script src="js/masonry.pkgd.min.js"></script>
 categories: [tool, demo, blog, game]
 ---
 <!--
@@ -13,14 +44,78 @@ categories: [tool, demo, blog, game]
 {% assign sorted_pages = site.pages|sort:'url' %}
 {% endraw %}
 -->
-{{ page.url | split: '/' | first}}
-<h1>{{site.title}}：{{page.title}}</h1>
-<ul>
-{% for category in page.categories %}
+<header>
+  <div class="header-wrap">
+   <h1>{{site.title}}：<a href="{{page.url}}">{{page.title}}</a></h1> 
+   <nav id="nav">
+   {% for category in page.categories %}
+      <a href="#{{category}}">{{category}}</a>
+   {% endfor %}
+   </nav>
+  </div>
+</header>
+
+<ul id="container" class="grid">
   {% for demo in site.pages %}
-  {% if page.url != demo.url and demo.category == category %}
-  <li><a href="{{demo.url}}">{{demo.title}}</a> | <span class="description">[{{category | capitalize}}] {% if demo.description%}{{demo.description}}{% else %}{{demo.url | replace_first:'/demo/',''}}{% endif %}</span></li>
+  {% if page.url != demo.url and demo.layout == 'demo' %}
+  <li data-category="{{demo.category}}">
+    <a href="{{demo.url}}" title="{{demo.description}}">
+      {% if demo.thumb %}
+        <img src="{{demo.thumb}}" alt="{{demo.title}}">
+      {% else %}
+        <span class="thumb"><span class="text">{{demo.title}}</span></span>
+      {% endif %}
+    </a>
+    <figcaption>
+      <p>{{demo.title}}</p>
+    </figcaption>
+  </li>
   {% endif %}
   {% endfor %}
-{% endfor %}
 </ul>
+
+<script>
+var masonry , categories = "{{page.categories | join: ',' }},";
+
+window.onload = function(){
+  masonry = new Masonry( document.getElementById('container'), {
+    // options
+    columnWidth: 285,
+    gutter: 15,
+    itemSelector: 'li'
+  });
+  var cate = location.hash.replace('#','');
+  showCate(cate);
+  selectNav(cate);
+}
+
+//show specify category
+function showCate(cate){
+  if(cate == '' || categories.indexOf(cate + ',') === -1 ) return;
+  var list = document.getElementById('container').getElementsByTagName('li');
+  for(var i = 0, len = list.length ; i < len ; i++){
+    list[i].style.display = list[i].getAttribute('data-category') == cate ? 'block' : 'none';
+  }
+  masonry.layout();
+}
+
+//select specify nav
+function selectNav(cate){
+  if(cate == '' || categories.indexOf(cate + ',') === -1 ) return;
+  var list = document.getElementById('nav').getElementsByTagName('a');
+  for(var i = 0, len = list.length ; i < len ; i++){
+    list[i].className = list[i].getAttribute('href') == '#' + cate ? 'on' : '';
+  }
+}
+
+document.getElementById('nav').onclick = function(ev){
+  var ev = ev || window.event, target = ev.target || ev.srcElement;
+  if(target.tagName.toLowerCase() === 'a'){
+    var cate = target.getAttribute('href').replace('#','');
+    showCate(cate);
+    selectNav(cate)
+  }
+}
+</script>
+</body>
+</html>
