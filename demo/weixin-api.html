@@ -1,0 +1,62 @@
+---
+layout: demo
+title: 微信接口测试
+description: WeixinJSBridge对象的部分接口测试
+category: demo
+custom_css: |
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  />
+  <meta name="format-detection" content="telephone=no">
+  <style>
+  img{max-width:100%;}
+  </style>
+---
+
+<p>当前网络链接：<strong id="network"></strong></p>
+<p>点击图片浏览更多大图</p>
+<p id="imagePreview">
+  <img src="http://pics2.paipaiimg.com/update/20131225/pcd_151830446.jpg" alt="Adidas新款男子高级鹅绒茄克">
+</p>
+
+<script>
+var result = '',
+    networkMap = {
+      "network_type:wifi": "wifi网络",
+      "network_type:edge": "非wifi,包含3G/2G",
+      "network_type:fail": "网络断开连接",
+      "network_type:wwan": "2G或者3G",
+      "network_type:not_allow": "无系统权限"
+    },
+    imgList = [
+      'http://pics2.paipaiimg.com/update/20131225/pcd_151830446.jpg',
+      'http://pics3.paipaiimg.com/update/20131225/pcd_152044937.jpg',
+      'http://pics3.paipaiimg.com/update/20131225/pcd_152238111.jpg',
+      'http://pics1.paipaiimg.com/update/20131225/pcd_152309646.jpg'
+    ]
+
+document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+  document.getElementById('imagePreview').onclick = function(){
+    WeixinJSBridge.invoke('imagePreview',{ 'current':imgList[0], 'urls':imgList} );   
+  }
+  /*
+  var keys = [];
+  for(i in WeixinJSBridge){
+    keys.push(i);
+  }
+  keys.sort().forEach(function(el,n){
+    document.writeln(el +":" +WeixinJSBridge[el] + '<br />');
+  })
+  */
+  //隐藏右上角分享按钮
+  //WeixinJSBridge.call('hideOptionMenu');
+  //隐藏底部状态栏
+  WeixinJSBridge.call('hideToolbar');
+
+  WeixinJSBridge.invoke('getNetworkType',{},
+    function(e){
+      document.getElementById('network').innerHTML = networkMap[e.err_msg];
+  });
+
+});
+
+
+</script>
