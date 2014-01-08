@@ -55,7 +55,7 @@ categories: [tool, demo, blog, game]
   </div>
 </header>
 
-<ul id="container" class="grid">
+<ul id="container" class="grid" style="visibility:hidden;">
   {% for demo in site.pages %}
   {% if page.url != demo.url and demo.layout == 'demo' %}
   <li data-category="{{demo.category}}">
@@ -75,15 +75,22 @@ categories: [tool, demo, blog, game]
 </ul>
 
 <script>
-var masonry , categories = "{{page.categories | join: ',' }},";
+var masonry , 
+    categories = "{{page.categories | join: ',' }},",
+    container =  document.getElementById('container');
+
+masonry = new Masonry( container, {
+  columnWidth: 285,
+  gutter: 15,
+  itemSelector: 'li',
+  isInitLayout : false
+});
+masonry.on('layoutComplete', function() {
+  container.style.visibility = "visible";
+});
 
 window.onload = function(){
-  masonry = new Masonry( document.getElementById('container'), {
-    // options
-    columnWidth: 285,
-    gutter: 15,
-    itemSelector: 'li'
-  });
+  masonry.layout();
   var cate = location.hash.replace('#','');
   showCate(cate);
   selectNav(cate);
