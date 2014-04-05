@@ -75,7 +75,7 @@ $id('generate').onclick = function(){
   borderTester.style.borderWidth = $id('borderWidth').value;
   borderTester.style.backgroundColor = $id('backgroundColor').value;
 
-  var code = [], dataURI = '', isError = false, backgroundColor = $id('backgroundColor').value;
+  var bgCode = [],bgSizeCode=[], dataURI = '', isError = false, backgroundColor = $id('backgroundColor').value;
   var direction = ['Top','Right', 'Bottom', 'Left'];
 
   direction.forEach(function(el){
@@ -93,20 +93,23 @@ $id('generate').onclick = function(){
       isError = true;
     }else{
       if(dataURI.length >　22){
-        var bg = ['url(' + dataURI + ')', repeat, position, '/', size];
-        code.push(bg.join(' '));        
+        var bg = ['url(' + dataURI + ')', repeat, position];
+        bgCode.push(bg.join(' '));
+        bgSizeCode.push(size);       
       }
     }
   });
 
   if(isError){
-    code = ['Error'];
+    bgCode = ['Error'];
   }
 
-  code = code.join(',') + ' ' + backgroundColor;
+  bgCode = bgCode.join(',') + ' ' + backgroundColor;
+  bgSizeCode = bgSizeCode.join(',');
 
-  $id('code').value = 'background:' + code +';';
-  $id('bgTester').style.background = code;
+  $id('code').value = 'background:' + bgCode +';' + '\nbackground-size:' + bgSizeCode + ';';
+  $id('bgTester').style.background = bgCode;
+  $id('bgTester').style.backgroundSize = bgSizeCode;
 
 }
 
