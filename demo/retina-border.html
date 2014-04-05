@@ -9,16 +9,17 @@ custom_css: |
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="format-detection" content="telephone=no">
   <style>
-    body{padding:10px;margin:0 auto;max-width:640px;background: #E1E1E1;color: #626671;font:14px Helvetica, sans-serif;}
+    body{padding:20px 10px 10px;margin:0 auto;max-width:640px;background: #E1E1E1;color: #626671;font:14px Helvetica, sans-serif;}
     h1{margin:0 0 20px;font-size: 20px;text-shadow:0 1px 0 #fff;display: block;}
     .tester{width:100px;height:100px;background-color: #eee;display: inline-block;margin-right: 10px;text-align: center;line-height: 100px;box-sizing:border-box;vertical-align: top;}
     .code textarea{width:100%;padding: 10px;box-sizing:border-box;}
+    .main{overflow: hidden;}
     .box{padding: 10px;box-shadow: 0 1px 2px rgba(0,0,0,0.5), inset 0 1px 0 #fff;border-radius: 3px;background-color: #fff;margin-bottom: 20px;display: inline-block;vertical-align: top;
-      height:230px;
+      height:230px;box-sizing:border-box;width:49%;
     }
-    .setting{}
+    .setting{float: right;}
     .prev{
-      width:310px;
+      float: left;
       text-align: center;
     }
     .setting label{width: 125px;display: inline-block;}
@@ -32,29 +33,29 @@ custom_css: |
     }
 
     @media all and (max-width: 600px) {
-      .box{display: block;height:auto;width:auto;}
+      .box{display: block;height:auto;width:auto;float:none;}
     }
+    .site-info{border-top: none;margin-top: 0;}
   </style>
 ---
 
 <canvas width="0" height="0" style="display:none;"><strong style="background:#f00">Browser do not support this tool. Please Try in Chrome</strong></canvas>
 <h1>Generate odd border width style for retina </h1>
 
-<div class="prev box">
-  <p id="borderTester" class="tester">border</p>
-  <p id="bgTester" class="tester">bg-image</p> 
+<div class="main">
+  <div class="prev box">
+    <p id="borderTester" class="tester">border</p>
+    <p id="bgTester" class="tester">bg-image</p> 
+  </div>
+
+  <div class="setting box">
+    <p><label>border-color:</label><input type="text" id="borderColor" value="#DEDEDE" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+    <p><label>border-style:</label><input type="text" id="borderStyle" value="solid" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+    <p><label>border-width:</label><input type="text" id="borderWidth" value="0 1px 1px 1px" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+    <p><label>background-color:</label><input type="text" id="backgroundColor" value="#fff" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+    <p><button id="generate">generate!</button></p>
+  </div>
 </div>
-
-<div class="setting box">
-  <p><label>border-color:</label><input type="text" id="borderColor" value="#DEDEDE" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
-  <p><label>border-style:</label><input type="text" id="borderStyle" value="solid" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
-  <p><label>border-width:</label><input type="text" id="borderWidth" value="0 1px 1px 1px" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
-  <p><label>background-color:</label><input type="text" id="backgroundColor" value="#fff" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
-  <p><button id="generate">generate!</button></p>
-</div>
-
-
-
 
 <div class="code">
   <textarea id="code" cols="30" rows="15"></textarea>
@@ -102,9 +103,9 @@ $id('generate').onclick = function(){
     code = ['Error'];
   }
 
-  code = 'background:' + code.join(',') + ' ' + backgroundColor;
+  code = code.join(',') + ' ' + backgroundColor;
 
-  $id('code').value = code;
+  $id('code').value = 'background:' + code +';';
   $id('bgTester').style.background = code;
 
 }
