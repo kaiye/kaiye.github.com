@@ -1,0 +1,195 @@
+---
+layout: demo
+title: Retina Border Generator
+description: 通过background-image方式模拟手机端retina屏下奇数边框宽度效果
+category: tool
+custom_css: |
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"  />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <style>
+    body{padding:10px;margin:0 auto;max-width:640px;background: #E1E1E1;color: #626671;font:14px Helvetica, sans-serif;}
+    h1{margin:0 0 20px;font-size: 20px;text-shadow:0 1px 0 #fff;display: block;}
+    .tester{width:100px;height:100px;background-color: #eee;display: inline-block;margin-right: 10px;text-align: center;line-height: 100px;box-sizing:border-box;vertical-align: top;}
+    .code textarea{width:100%;padding: 10px;box-sizing:border-box;}
+    .box{padding: 10px;box-shadow: 0 1px 2px rgba(0,0,0,0.5), inset 0 1px 0 #fff;border-radius: 3px;background-color: #fff;margin-bottom: 20px;display: inline-block;vertical-align: top;
+      height:230px;
+    }
+    .setting{}
+    .prev{
+      width:310px;
+      text-align: center;
+    }
+    .setting label{width: 125px;display: inline-block;}
+    input[type=text]{
+      background-color: #f6f6f6;
+      border: 1px solid #D4D5D7;
+      border-radius: 3px;
+      padding: 4px 0 4px 4px;
+      color: #9d9fa0;
+      -webkit-appearance: none;
+    }
+
+    @media all and (max-width: 600px) {
+      .box{display: block;height:auto;width:auto;}
+    }
+  </style>
+---
+
+<canvas width="0" height="0" style="display:none;"><strong style="background:#f00">Browser do not support this tool. Please Try in Chrome</strong></canvas>
+<h1>Generate odd border width style for retina </h1>
+
+<div class="prev box">
+  <p id="borderTester" class="tester">border</p>
+  <p id="bgTester" class="tester">bg-image</p> 
+</div>
+
+<div class="setting box">
+  <p><label>border-color:</label><input type="text" id="borderColor" value="#DEDEDE" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+  <p><label>border-style:</label><input type="text" id="borderStyle" value="solid" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+  <p><label>border-width:</label><input type="text" id="borderWidth" value="0 1px 1px 1px" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+  <p><label>background-color:</label><input type="text" id="backgroundColor" value="#fff" autocorrect="off" autocapitalize="off" spellcheck="false"></p>
+  <p><button id="generate">generate!</button></p>
+</div>
+
+
+
+
+<div class="code">
+  <textarea id="code" cols="30" rows="15"></textarea>
+</div>
+
+<script>
+function $id(id){
+  return document.getElementById(id);
+}
+
+
+$id('generate').onclick = function(){
+  var borderTester = $id('borderTester');
+
+  borderTester.style.borderColor = $id('borderColor').value;
+  borderTester.style.borderStyle = $id('borderStyle').value;
+  borderTester.style.borderWidth = $id('borderWidth').value;
+  borderTester.style.backgroundColor = $id('backgroundColor').value;
+
+  var code = [], dataURI = '', isError = false, backgroundColor = $id('backgroundColor').value;
+  var direction = ['Top','Right', 'Bottom', 'Left'];
+
+  direction.forEach(function(el){
+    var borderDirectionWidth = 'borderDirectionWidth'.replace('Direction',el),
+        borderDirectionStyle = 'borderDirectionStyle'.replace('Direction',el),
+        borderDirectionColor = 'borderDirectionColor'.replace('Direction',el),
+        width = parseInt(borderTester.style[borderDirectionWidth].replace('px','')),
+        repeat = (el === 'Top' || el === 'Bottom') ? 'repeat-x' : 'repeat-y';
+        position = (el === 'Top' || el === 'Left') ? '0 0' : ( el === 'Bottom' ? '0 100%' : '100% 0' );
+        size = borderTester.style[borderDirectionStyle] === 'dashed' ? ((el === 'Top' || el === 'Bottom') ? width * 3 +'px ' + width + 'px' : width +'px ' + width * 3 + 'px'): (width + 'px ' + width + 'px');
+       
+    var dataURI = getBorderImageDataURI(width, borderTester.style[borderDirectionStyle], borderTester.style[borderDirectionColor], el.toLowerCase());
+    // console.log(dataURI);
+    if(!dataURI.length){
+      isError = true;
+    }else{
+      if(dataURI.length >　22){
+        var bg = ['url(' + dataURI + ')', repeat, position, '/', size];
+        code.push(bg.join(' '));        
+      }
+    }
+  });
+
+  if(isError){
+    code = ['Error'];
+  }
+
+  code = 'background:' + code.join(',') + ' ' + backgroundColor;
+
+  $id('code').value = code;
+  $id('bgTester').style.background = code;
+
+}
+
+//获取border data uri
+function getBorderImageDataURI(borderWidth, borderStyle, borderColor, borderDirection){
+  var canvas = document.createElement('canvas'),
+      canvasSize = ['width', 'height'], 
+      rect = ['x','y','width','height'];
+
+  if(canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+  }else{
+    return '';
+  }
+
+  var sizeMartix = {
+    'solid' :{
+      'top'    : {
+        'canvas' : [1, borderWidth * 2],
+        'rect'   : [0, 0, 1, borderWidth]
+      },
+      'right'  : {
+        'canvas' : [borderWidth * 2, 1],
+        'rect'   : [borderWidth, 0, borderWidth, 1]
+      },
+      'bottom' : {
+        'canvas' : [1, borderWidth * 2],
+        'rect'   : [0, borderWidth, 1, borderWidth]
+      },
+      'left'   : {
+        'canvas' : [borderWidth * 2, 1],
+        'rect'   : [0, 0, borderWidth, 1]        
+      }
+    },
+    'dotted' :{
+      'top'    : {
+        'canvas' : [borderWidth * 2, borderWidth * 2],
+        'rect'   : [0, 0, borderWidth, borderWidth]
+      },
+      'right'  : {
+        'canvas' : [borderWidth * 2, borderWidth * 2],
+        'rect'   : [borderWidth, 0, borderWidth, borderWidth]
+      },
+      'bottom' : {
+        'canvas' : [borderWidth * 2, borderWidth * 2],
+        'rect'   : [0, borderWidth, borderWidth, borderWidth]
+      },
+      'left'   : {
+        'canvas' : [borderWidth * 2, borderWidth * 2],
+        'rect'   : [0, 0, borderWidth, borderWidth]   
+      }
+    },
+    'dashed' :{
+      'top'    : {
+        'canvas' : [borderWidth * 6, borderWidth * 2],
+        'rect'   : [0, 0, borderWidth * 3, borderWidth]
+      },
+      'right'  : {
+        'canvas' : [borderWidth * 2, borderWidth * 6],
+        'rect'   : [borderWidth, 0, borderWidth, borderWidth * 3]
+      },
+      'bottom' : {
+        'canvas' : [borderWidth * 6, borderWidth * 2],
+        'rect'   : [0, borderWidth, borderWidth * 3, borderWidth]
+      },
+      'left'   : {
+        'canvas' : [borderWidth * 2, borderWidth * 6],
+        'rect'   : [0, 0, borderWidth, borderWidth * 3]
+      }
+    }
+  }
+
+  canvasSize = sizeMartix[borderStyle][borderDirection].canvas;
+  rect = sizeMartix[borderStyle][borderDirection].rect;
+
+  canvas.width = canvasSize[0];
+  canvas.height = canvasSize[1];
+  ctx.fillStyle = borderColor;
+  ctx.fillRect(rect[0],rect[1],rect[2],rect[3]);
+  
+  //document.body.appendChild(canvas);
+
+  return canvas.toDataURL();
+}
+
+</script>
+
