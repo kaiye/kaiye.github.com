@@ -107,7 +107,7 @@ $id('generate').onclick = function(){
   bgCode = bgCode.join(',') + ' ' + backgroundColor;
   bgSizeCode = bgSizeCode.join(',');
 
-  $id('code').value = 'background:' + bgCode +';' + '\nbackground-size:' + bgSizeCode + ';';
+  $id('code').value = 'background:' + bgCode +';' + '\n-webkit-background-size:' + bgSizeCode + ';\nbackground-size:' + bgSizeCode + ';';
   $id('bgTester').style.background = bgCode;
   $id('bgTester').style.backgroundSize = bgSizeCode;
 
