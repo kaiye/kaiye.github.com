@@ -1,0 +1,38 @@
+---
+layout: demo
+title: 单行自适应宽度布局
+category: demo
+description: 使用超大负margin-right实现商品搭配模块的不换行效果
+custom_css: |
+  <style type="text/css">
+  #slide-wrap {
+    width: 550px; 
+    height:300px;
+    margin:0 auto;
+    overflow: auto; 
+    border:1px solid #ddd;
+  }
+  #inner-wrap {
+    float:left;
+    margin-right:-999em;
+    padding-left:20px;
+  }
+  img {
+    float:left; 
+    width:283px;
+    height:200px;
+    background:blue;
+    color:#FFF;
+    margin:20px 20px 0 0;
+  }
+  </style>
+---
+
+<div id="slide-wrap">
+   <div id="inner-wrap"> 
+      <img src="http://img.luoo.net/pics/vol/534d1939781fc.jpg_640x452.jpg" width="283" height="200" alt="Test Image"> 
+      <img src="http://img.luoo.net/pics/vol/534d1939781fc.jpg_640x452.jpg" width="283" height="200" alt="Test Image"> 
+      <img src="http://img.luoo.net/pics/vol/534d1939781fc.jpg_640x452.jpg" width="283" height="200" alt="Test Image"> 
+      <img src="http://img.luoo.net/pics/vol/534d1939781fc.jpg_640x452.jpg" width="283" height="200" alt="Test Image"> 
+  </div>
+</div>

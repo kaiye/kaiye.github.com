@@ -33,8 +33,8 @@ custom_css: |
   .grid p{font-size: 20px;padding: 15px 20px;}
 
 
-  footer{background-color: #DDDDDD;}
-  .site-info{font-size: 16px;color: #222;}
+  footer{}
+  .site-info{font-size: 16px;color: #222;border-top: 1px solid #DDDDDD;}
   </style>
   <script src="js/masonry.pkgd.min.js"></script>
 categories: [tool, demo, blog, game]
@@ -46,7 +46,7 @@ categories: [tool, demo, blog, game]
 -->
 <header>
   <div class="header-wrap">
-   <h1>{{site.title}}：<a href="{{page.url}}">{{page.title}}</a></h1> 
+   <h1>{{site.title}}</h1> 
    <nav id="nav">
    {% for category in page.categories %}
       <a href="#{{category}}">{{category}}</a>
