@@ -1,0 +1,14 @@
+---
+layout: demo
+title: 检测字体是否存在
+category: demo
+description: 通过CSS方法检测字体是否存在
+---
+
+<a id="font1" style="display:inline-block;font-size:30px;font-family:'宋体'">mmmmmm</a>
+<a id="font2" style="display:inline-block;font-size:30px;font-family:'微软雅黑','宋体'">mmmmmm</a>
+<div id="result"></div>
+
+<script>
+document.getElementById("result").innerHTML = document.getElementById("font1").offsetWidth === document.getElementById("font2").offsetWidth ? '微软雅黑不存在' : '微软雅黑存在';
+</script>
