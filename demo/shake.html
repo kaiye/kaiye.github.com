@@ -1,0 +1,93 @@
+---
+layout: demo
+title: H5 Shake
+description: 手机摇一摇事件测试
+category: demo
+custom_css: |
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  />
+  <meta name="format-detection" content="telephone=no">
+  <style>
+  div#container{
+     -webkit-perspective: 500px;
+  }
+  div#orienter{
+     text-align: center;
+     width: 80%;
+     font-size: 2em;
+     padding: 2em 0;
+     margin: 5em auto 0;
+  }
+  div#orienter.tilt{
+     background-color: red;
+  }
+  </style>
+---
+
+
+<div id="container">
+   <div id="orienter">Accelerometer</div>
+</div>
+
+
+<script>
+
+if (window.DeviceOrientationEvent) {
+   var lastOrientation,currentOrientation,
+           //多久检查一次
+           tiltTime = 100,
+           //每次检查的最小阈值
+           tiltThreshold = 100,
+           //展示的div
+           odiv = document.getElementById("orienter"),
+           //定时器检查
+           tiltInterval = setInterval(tiltCheck, tiltTime);
+
+   function Orientation(x, y, z) {
+      this.x = x || 0;
+      this.y = y || 0;
+      this.z = z || 0;
+   }
+   //两次晃动的位移差
+   Orientation.prototype.diff = function(o) {
+      return new Orientation(
+              this.x - o.x,
+              this.y - o.y,
+              this.z - o.z);
+   };
+   //偏移量
+   Orientation.prototype.mag = function() {
+      return Math.sqrt(
+              (this.x * this.x) +
+              (this.y * this.y) +
+              (this.z * this.z));
+   };
+
+   function tiltHandler() {
+      console.log("tilt");
+      odiv.className = "tilt";
+      setTimeout(function() {
+         odiv.className = "";
+      }, 2000);
+   }
+
+   function tiltCheck() {
+      if (lastOrientation) {
+         var mag = currentOrientation.diff(lastOrientation).mag();
+         if (mag > tiltThreshold) {
+            tiltHandler();
+         }
+      }
+      lastOrientation = currentOrientation;
+   }
+
+   window.addEventListener("deviceorientation", function(e) {
+      currentOrientation = new Orientation(e.beta, e.gamma, e.alpha);
+      odiv.style.webkitTransform =
+              "rotateX(" + (currentOrientation.x) + "deg) " +
+              "rotateY(" + (-currentOrientation.y) + "deg) " +
+              "rotateZ(" + (currentOrientation.z) + "deg)";
+   });
+}
+
+    
+</script>
