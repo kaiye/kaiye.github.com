@@ -41,7 +41,7 @@ custom_css: |
   } 
   </style>
   <script>
-  window.matchMedia || ~function(){
+  window.matchMedia || (function(){
       var setWidthClass = function(){
           var widthSet = [1024,1280,1440,1600,1920], width
               windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
@@ -65,7 +65,7 @@ custom_css: |
       }else if(window.attachEvent) {
           window.attachEvent("onresize", setWidthClass);
       }
-  };
+  })();
   </script>
 ---
 
