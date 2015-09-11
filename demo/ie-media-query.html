@@ -1,0 +1,74 @@
+---
+layout: demo
+title: IE6/7/8 Media Query
+category: blog
+description: 使用 SASS + JS 的方案让 IE6/7/8 支持 media query
+custom_css: |
+  <style>   
+  body {
+      width: 1024px;
+      background-color: red;
+  }
+  @media only screen and (min-width: 1024px) {
+      body {
+          width: 1024px;
+          background-color: orange;
+     }
+  }
+  .w1024px body, .w1280px body, .w1440px body, .w1600px body, .w1920px body {
+      width: 1024px;
+      background-color: orange;
+  }
+  @media only screen and (min-width: 1280px) and (max-width: 1440px) {
+      body {
+          width: 1280px;
+          background-color: green;
+     }
+  }
+  .w1280px body {
+      width: 1280px;
+      background-color: green;
+  }
+  @media only screen and (min-width: 1600px) {
+      body {
+          width: 1600px;
+          background-color: blue;
+     }
+  }
+  .w1600px body, .w1920px body {
+      width: 1600px;
+      background-color: blue;
+  } 
+  </style>
+  <script>
+  window.matchMedia && ~function(){
+      var setWidthClass = function(){
+          var widthSet = [1024,1280,1440,1600,1920], width
+              windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+              htmlEl = document.getElementsByTagName('html')[0],
+              re = /w\d+px/;
+          while(width = widthSet.pop()){
+              if(windowWidth < widthSet[0]){
+                  htmlEl.className = htmlEl.className.replace(re, '');
+                  break;
+              }
+              if(windowWidth >= width){
+                  var className = 'w'+ width + 'px';
+                  htmlEl.className = re.test(htmlEl.className) ? htmlEl.className.replace(re,className) : htmlEl.className.replace(/\s*$/, ' '+ className);
+                  break;
+              }
+          }
+      }
+      setWidthClass();
+      if(window.addEventListener){
+          window.addEventListener("resize", setWidthClass, false);
+      }else if(window.attachEvent) {
+          window.attachEvent("onresize", setWidthClass);
+      }
+  };
+  </script>
+---
+
+<p>网页背景色会随调整浏览器窗口大小的改变而改变</p>
+<p><a href="https://github.com/kaiye/kaiye.github.com/blob/master/demo/css/ie-media-query.scss">SASS @mixin 源文件</a></p>
+

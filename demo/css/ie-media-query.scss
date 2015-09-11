@@ -1,0 +1,57 @@
+@charset "utf-8";
+
+@mixin mediaWidth($min-width: 1024px, $max-width: null) {
+    $widthSet: (1024px, 1280px, 1440px, 1600px, 1920px);
+    $selector: ();
+
+    @if $max-width {
+        @media only screen and (min-width: $min-width) and (max-width: $max-width){ 
+            @content; 
+        }
+    } @else {
+        @media only screen and (min-width: $min-width) {
+            @content; 
+        }
+    }
+
+    @each $item in $widthSet {
+        @if $max-width {
+            @if $item >= $min-width and $item < $max-width {
+                $selector: append($selector, unquote('.w#{$item} &'), 'comma');
+            }
+        } @else {
+            @if $item >= $min-width{
+                $selector: append($selector, unquote('.w#{$item} &'), 'comma');
+            }
+        }
+    }
+
+    #{$selector}{
+        @content;
+    }
+
+}
+
+body{
+    width: 1024px;
+    background-color: red;
+
+    @include mediaWidth(1024px) {
+        width: 1024px;
+        background-color: orange;
+    }
+
+    @include mediaWidth(1280px, 1440px) {
+        width: 1280px;
+        background-color: green;
+    }
+
+    @include mediaWidth(1600px) {
+        width: 1600px;
+        background-color: blue;
+    }
+
+}
+
+
+
