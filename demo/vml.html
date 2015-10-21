@@ -1,0 +1,40 @@
+---
+layout: demo
+title: VML特性检测
+description: VML特性检测
+category: demo
+custom_css: |
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  />
+  <meta name="format-detection" content="telephone=no">
+  <style>
+  .circle{width:50px;height:50px;border:2px solid #00A7EA;border-radius:100px;}
+  </style>
+---
+<p>IE6/7/8 下使用 VML 画圆，其他浏览器使用 border-radius </p>
+
+<div id="circle-container">
+    <div class="circle"></div>
+</div>
+
+
+<script>
+// http://stackoverflow.com/questions/654112/how-do-you-detect-support-for-vml-or-svg-in-a-browser
+
+function supportsVml() {
+    if (typeof supportsVml.supported == "undefined") {
+        var a = document.body.appendChild(document.createElement('div'));
+        a.innerHTML = '<v:shape id="vml_flag1" adj="1" />';
+        var b = a.firstChild;
+        b.style.behavior = "url(#default#VML)";
+        supportsVml.supported = b ? typeof b.adj == "object": true;
+        a.parentNode.removeChild(a);
+    }
+    return supportsVml.supported;
+}
+
+if(supportsVml()){
+    var circleContainer = document.getElementById('circle-container');
+    circleContainer.innerHTML = '<v:roundrect arcsize="100px" strokeweight="2px" strokecolor="#00A7EA" style="width:50px;height:50px;display:inline-block;behavior:url(#default#VML);" />';
+}
+
+</script>
