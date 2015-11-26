@@ -2,7 +2,7 @@
 
 * 我的个人站点： [yekai.net](http://yekai.net)
 * 我的微信公众号： 搜索爱『猫哥学前班』的首字母 imgXQB，或直接扫描以下二维码：   
-	![](https://raw.githubusercontent.com/kaiye/kaiye.github.com/master/img/imgqxb.png)
+	![](https://raw.githubusercontent.com/kaiye/kaiye.github.com/master/img/imgqxb.jpg)
 
 
 ## 招聘
