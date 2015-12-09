@@ -129,6 +129,11 @@ function scaleReset(x){
 	$id('imgWidth').value = $id('imgHeight').value = x;
 	$id('scaleX').value = $id('scaleY').value = (x - 0).toFixed(1);
 }		
+
+//奇数的处理
+function roundOddNum(num){
+	return num % 2 ? (num > 0 ? Math.ceil(num) : Math.floor(num) ): num;
+}
 		
 function run(){
 	var oldX = parseInt($id("oldX").value, 10),
@@ -169,11 +174,19 @@ function run(){
 		$id('offsetX').value = offsetX;
 		$id('offsetY').value = offsetY;
 		//calc
-		result =  oldCode.value.replace(/(background\-position\:)\s*([-0-9]+)(?:px)?\s+([-0-9]+)(?:px)?;/g, function(match, bp, x, y){
-			var _x = Math.round(parseInt(x, 10) / scaleX) - offsetX;
-			var _y = Math.round(parseInt(y, 10) / scaleY) - offsetY;
+		result =  oldCode.value.replace(/(background\-position\:)\s*([-0-9]+)(?:px)?\s+([-0-9]+)(?:px)?\s*;?/g, function(match, bp, x, y){
+			var _x = roundOddNum(parseInt(x, 10) / scaleX) - offsetX;
+			var _y = roundOddNum(parseInt(y, 10) / scaleY) - offsetY;
 		
 			return bp + _x + (_x === 0 ? " " : "px ") + _y + (_y === 0 ? ";" : "px;"); 
+		}).replace(/(width\:)\s*([-0-9]+)(?:px)\s*;?/g, function(match, prop, v){
+			var _v = roundOddNum(parseInt(v, 10) / scaleX) - offsetX;
+		
+			return prop + _v + (_v === 0 ? " " : "px ") ; 
+		}).replace(/(height\:)\s*([-0-9]+)(?:px)\s*;?/g, function(match, prop, v){
+			var _v = roundOddNum(parseInt(v, 10) / scaleY) - offsetY;
+		
+			return prop + _v + (_v === 0 ? " " : "px ") ; 
 		});
 		//add prefix
 		result = result.replace(/[^\r\n\{]+{[^}]*}/g, function(match){
