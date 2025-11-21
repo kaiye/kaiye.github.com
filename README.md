@@ -4,8 +4,8 @@
 
 ## 简介
 
-站点： [yekai.net](http://yekai.net)
+站点： [yekai.net](https://yekai.net)
 
-微信公众号： 「猫哥学前班」   
+微信公众号： 「猫哥ai编程」   
 ![](img/imgxqb.jpg)
 
